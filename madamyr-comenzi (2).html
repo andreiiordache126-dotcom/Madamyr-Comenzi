@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="ro"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Madamyr Srl — Comenzi Furnizori</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#0f1117;--surface:#1a1d27;--card:#222633;--card-hover:#2a2f3f;
+--border:#2e3348;--text:#e8e9ed;--text2:#9498a8;--text3:#6b7084;
+--accent:#f0c040;--accent2:#e6a820;--accent-bg:rgba(240,192,64,0.08);
+--danger:#e05252;--success:#4ecf8b;--blue:#5b8def;
+--radius:14px;--radius-sm:10px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;padding-bottom:80px;-webkit-tap-highlight-color:transparent}
+.header{background:linear-gradient(135deg,#1e2235 0%,#252a40 100%);padding:20px 16px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.header h1{font-size:20px;font-weight:700;color:var(--accent);letter-spacing:-0.3px}
+.header p{font-size:12px;color:var(--text2);margin-top:2px}
+.tabs{display:flex;gap:0;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:62px;z-index:99}
+.tab{flex:1;text-align:center;padding:12px 6px;font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:.2s}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--accent-bg)}
+.page{display:none;padding:12px}
+.page.active{display:block}
+.section-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.8px;margin:16px 0 10px;padding:0 4px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;transition:.15s}
+.card:active{transform:scale(0.985)}
+.card-head{display:flex;align-items:center;padding:14px;cursor:pointer;gap:12px}
+.card-icon{font-size:22px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:var(--accent-bg)}
+.card-left{flex:1;min-width:0}
+.card-title{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-sub{font-size:12px;color:var(--text3);margin-top:2px}
+.card-arrow{color:var(--text3);font-size:18px}
+.search-box{position:relative;margin-bottom:12px}
+.search-box input{width:100%;padding:12px 14px 12px 40px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:.2s}
+.search-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,192,64,.1)}
+.search-box .ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 18px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:.15s;white-space:nowrap}
+.btn:active{transform:scale(0.96)}
+.btn-primary{background:var(--accent);color:#111}
+.btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-success{background:var(--success);color:#111}
+.btn-sm{padding:8px 12px;font-size:12px;border-radius:8px}
+.btn-block{width:100%}
+.product-row{padding:10px 14px;border-bottom:1px solid var(--border)}
+.product-row:last-child{border-bottom:none}
+.product-top{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.product-name{flex:1;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.unit-tag{font-size:10px;font-weight:600;color:var(--blue);background:rgba(91,141,239,.1);padding:2px 7px;border-radius:5px;white-space:nowrap}
+.inline-edit{width:26px;height:26px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:12px;color:var(--text3);flex-shrink:0;transition:.15s}
+.inline-edit:active{background:var(--accent-bg);color:var(--accent);border-color:var(--accent)}
+.loc-qty-row{display:flex;align-items:center;gap:8px;margin-top:5px;padding-left:4px}
+.loc-emoji{font-size:14px;width:22px;text-align:center}
+.loc-label{font-size:12px;color:var(--text3);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qty-ctrl{display:flex;align-items:center;gap:0;background:var(--surface);border-radius:8px;border:1px solid var(--border);overflow:hidden}
+.qty-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;color:var(--accent);font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+.qty-btn:active{background:var(--accent-bg)}
+.qty-val{width:36px;text-align:center;font-size:13px;font-weight:600;color:var(--text);background:transparent;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);font-family:inherit;outline:none;-moz-appearance:textfield}
+.qty-val::-webkit-inner-spin-button,.qty-val::-webkit-outer-spin-button{-webkit-appearance:none}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);z-index:200;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:85dvh;overflow-y:auto;padding:20px 16px 30px;animation:slideUp .25s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;text-align:center}
+.modal-btns{display:flex;gap:8px;margin-top:16px}
+.modal-btns .btn{flex:1}
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.5px}
+.form-input,.form-select{width:100%;padding:11px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:inherit;outline:none}
+.form-input:focus,.form-select:focus{border-color:var(--accent)}
+.form-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239498a8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.form-row{display:flex;gap:10px}
+.form-row .form-group{flex:1}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;z-index:300;animation:fadeIn .2s;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.empty{text-align:center;padding:40px 20px}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-text{color:var(--text3);font-size:14px;line-height:1.5;margin-bottom:16px}
+.preview-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin:12px 0;font-size:13px;line-height:1.7;white-space:pre-wrap;color:var(--text2);max-height:300px;overflow-y:auto}
+.hist-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.hist-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.hist-supplier{font-size:15px;font-weight:600}
+.hist-date{font-size:12px;color:var(--text3)}
+.hist-loc{font-size:12px;color:var(--accent);margin-bottom:4px}
+.hist-items{font-size:13px;color:var(--text2);line-height:1.6}
+.hist-btns{display:flex;gap:8px;margin-top:10px}
+.hist-group-title{font-size:15px;font-weight:700;margin:18px 0 10px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);display:flex;align-items:center;gap:10px}
+.hist-group-title .hg-icon{font-size:20px}
+.hist-group-title .hg-count{font-size:12px;color:var(--text3);margin-left:auto}
+.chip{display:inline-flex;align-items:center;padding:6px 12px;background:var(--card);border:1px solid var(--border);border-radius:20px;font-size:13px;color:var(--text2);cursor:pointer;margin:0 4px 6px 0;transition:.15s}
+.chip.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+.supplier-edit-row{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);gap:8px}
+.supplier-edit-row:last-child{border-bottom:none}
+.supplier-edit-name{flex:1;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.supplier-edit-unit{font-size:11px;color:var(--blue);background:rgba(91,141,239,.1);padding:2px 7px;border-radius:5px}
+.edit-btns{display:flex;gap:4px}
+.edit-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;color:var(--text2);transition:.15s}
+.edit-btn:active{background:var(--accent-bg);color:var(--accent)}
+.edit-btn.del:active{background:rgba(224,82,82,.12);color:var(--danger)}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--text2);font-size:14px;cursor:pointer;margin-bottom:12px;padding:4px 0}
+.back-btn:active{color:var(--accent)}
+.order-summary{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 20%);padding:16px 0 4px;margin-top:12px}
+#modal-container{}
+.filter-row{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch}
+.filter-row::-webkit-scrollbar{display:none}
+.mode-toggle{display:flex;gap:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:14px}
+.mode-btn{flex:1;text-align:center;padding:10px 8px;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border:none;background:transparent;font-family:inherit;transition:.15s}
+.mode-btn.active{background:var(--accent);color:#111}
+.global-result{display:flex;align-items:center;padding:12px 14px;gap:10px;border-bottom:1px solid var(--border);cursor:pointer;transition:.1s}
+.global-result:active{background:var(--card-hover)}
+.global-result:last-child{border-bottom:none}
+.gr-product{flex:1;font-size:14px;font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gr-supplier{font-size:11px;color:var(--text3);max-width:50%;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.loc-btn{display:flex;align-items:center;gap:10px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:8px;transition:.15s}
+.loc-btn:active{transform:scale(0.985);border-color:var(--accent)}
+.loc-btn .emoji{font-size:24px}
+.loc-btn .name{font-size:15px;font-weight:600}
+.supplier-section{margin:12px 0 6px;padding:8px 12px;background:var(--accent-bg);border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:8px}
+.loc-product-row{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);gap:8px}
+.loc-product-row:last-child{border-bottom:none}
+</style>
+
+<script>try{localStorage.removeItem("mdmyr_suppliers_v3");if(!localStorage.getItem("mdmyr_history_v3"))localStorage.setItem("mdmyr_history_v3","[{\"id\":\"mpl70sgu04vq8\",\"supplierId\":\"mpfgyyvvonmbc\",\"supplierName\":\"S.C. ALMA TIM DISTRIBUTION S.R.L.\",\"date\":\"2026-05-25T12:39:12.414Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"URSUS 330 ML\",\"qty\":1,\"unit\":\"bax\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6zz308s571\",\"supplierId\":\"mpfgyyvvva8kj\",\"supplierName\":\"SOCIETATEA ARBITRARA DE METALURGIE INDUSTRIALA SI RELATII DE AFACERI S.A.M.I.R.A SRL\",\"date\":\"2026-05-25T12:38:34.332Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"Dovleac placintar\",\"qty\":30,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Lamai\",\"qty\":10,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Marar\",\"qty\":10,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Mere idared\",\"qty\":30,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Pere\",\"qty\":5,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Portocale\",\"qty\":45,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Ulei de floarea-soarelui\",\"qty\":30,\"unit\":\"L\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Varza alba\",\"qty\":10,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6z9w0oikgd\",\"supplierId\":\"mpfgyyvvehpl7\",\"supplierName\":\"LA MIRCEA MACELARU\",\"date\":\"2026-05-25T12:38:01.680Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"Carnati subtiri\",\"qty\":2,\"unit\":\"pachet\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Carne tocata de porc\",\"qty\":10,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6yojx49b33\",\"supplierId\":\"mpfgyyvvna9xe\",\"supplierName\":\"PREMIUM FRUCT SRL\",\"date\":\"2026-05-25T12:37:34.029Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"PROFRUCTTA LIMONADA CLASICA\",\"qty\":1,\"unit\":\"bax\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"PROFRUCTTA LIMONADA CU MENTA\",\"qty\":1,\"unit\":\"bax\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"PROFRUCTTA LIMONADA CU ZMEURA\",\"qty\":1,\"unit\":\"bax\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"PROFRUCTTA SUC MANDARINE\",\"qty\":1,\"unit\":\"bax\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"PROFRUCTTA SUC PERE\",\"qty\":1,\"unit\":\"bax\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6y4eyyz646\",\"supplierId\":\"mpfgyyvvqmqcq\",\"supplierName\":\"OMNIA GUSTI SRL\",\"date\":\"2026-05-25T12:37:07.930Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"Crema de fistic\",\"qty\":2,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Faina croissante\",\"qty\":125,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Unt crema\",\"qty\":2,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Unt placa\",\"qty\":2,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6xn4qw5a22\",\"supplierId\":\"mpfgyyvvbpipl\",\"supplierName\":\"MARATHON DISTRIBUTION GROUP S.R.L.\",\"date\":\"2026-05-25T12:36:45.530Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"Castraveti in otet\",\"qty\":1,\"unit\":\"bax\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Oua calibru L\",\"qty\":800,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Stafide aurii\",\"qty\":10,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Drojdie proaspata\",\"qty\":10,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6vq7pvxh68\",\"supplierId\":\"mpfgyyvv2wkhg\",\"supplierName\":\"JOSI LOGISTIC SRL\",\"date\":\"2026-05-25T12:35:16.213Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"Ciuperci feliate conserva\",\"qty\":3,\"unit\":\"cutie\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Iaurt grecesc\",\"qty\":1,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Lapte 3,5%\",\"qty\":120,\"unit\":\"L\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Masline negre rondele\",\"qty\":3,\"unit\":\"cutie\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Smantana\",\"qty\":5,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Telemea de vaca eco\",\"qty\":15,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Telemea moldoveneasca\",\"qty\":4,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Varza murata\",\"qty\":5,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Faina Nobila\",\"qty\":175,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Crema de branza\",\"qty\":2,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Faina 650 (7Spice)\",\"qty\":150,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6uz1x95yuw\",\"supplierId\":\"mpfgyyvv5hik2\",\"supplierName\":\"HYGIENE PLUS SRL\",\"date\":\"2026-05-25T12:34:41.013Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"CASEROLA MONO CARTON PATISERIE\",\"qty\":4,\"unit\":\"set\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"DOMESTOS\",\"qty\":4,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"FARFURII UNICA FOLOSINTA\",\"qty\":7,\"unit\":\"set\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"MANUSI UNICA  FOLOSINTA\",\"qty\":2,\"unit\":\"cutie\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"PAHAR PLASTIC FRESH PORTOCALE 290ML\",\"qty\":3,\"unit\":\"set\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"PROSOAPE  ROLA\",\"qty\":3,\"unit\":\"set\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"SERVETELE\",\"qty\":8,\"unit\":\"bax\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"SET TACAM UNICA FOLOSINTA\",\"qty\":15,\"unit\":\"set\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6txx8tnd6j\",\"supplierId\":\"mpfgyyvvo94mg\",\"supplierName\":\"EXCELSIOR GRAPHICS PRINT SRL\",\"date\":\"2026-05-25T12:33:52.892Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"CUTIE 1 PRAJITURA\",\"qty\":200,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"CUTIE 2 PRAJITURI\",\"qty\":200,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6t4iulgfru\",\"supplierId\":\"mpfgyyvvm00z4\",\"supplierName\":\"CRIS-TIM FAMILY HOLDING S.A.\",\"date\":\"2026-05-25T12:33:14.790Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"Cremwursti\",\"qty\":4,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Parizer de pui\",\"qty\":2,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Salam Victoria\",\"qty\":1,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Sunca presata\",\"qty\":25,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Sunculita taraneasca\",\"qty\":2,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6rb107svkl\",\"supplierId\":\"mpfgyyvvutttm\",\"supplierName\":\"BAKE STORE SRL\",\"date\":\"2026-05-25T12:31:49.908Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"Cacao pudra\",\"qty\":1,\"unit\":\"sac\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpl6qb5rda7ye\",\"supplierId\":\"mpfgyyvvsjgud\",\"supplierName\":\"AQUILA PART PROD COM S.A.\",\"date\":\"2026-05-25T12:31:03.423Z\",\"deliveryDate\":\"2026-05-26\",\"items\":[{\"name\":\"Nutella\",\"qty\":12,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"Snitel de pui\",\"qty\":10,\"unit\":\"kg\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]},{\"id\":\"mpkzdrwfm2n46\",\"supplierId\":\"mpfgyyvvbx8yl\",\"supplierName\":\"COCA-COLA HBC ROMANIA S.R.L.\",\"date\":\"2026-05-25T09:05:21.279Z\",\"items\":[{\"name\":\"COCA COLA 0,5L\",\"qty\":4,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"DORNA MINERALA 0,5L\",\"qty\":5,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"FANTA PORTOCALE 0,5L\",\"qty\":2,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"FANTA STRUGURI 0,25L\",\"qty\":1,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"FANTA TROPICAL 0,5 L\",\"qty\":1,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"FUZE TEA CEAI VERDE 0,5L\",\"qty\":2,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"FUZE TEA LAMAIE 0,5L\",\"qty\":2,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"IZVORUL ALB 0,5L\",\"qty\":20,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"},{\"name\":\"COCA COLA ZERO ZAHAR 0,5L\",\"qty\":2,\"unit\":\"buc\",\"locationId\":\"scv\",\"locationName\":\"Scovergaria Micai\",\"locationEmoji\":\"🥐\"}]}]");}catch(e){}</script>
+</head>
+<body>
+
+<div class="header">
+  <h1>Madamyr Srl</h1>
+  <p>Gestiune Comenzi Furnizori</p>
+</div>
+
+<div class="tabs">
+  <div class="tab" data-tab="comenzi">📦 Comenzi</div>
+  <div class="tab" data-tab="istoric">📋 Istoric</div>
+  <div class="tab active" data-tab="gestiune">⚙️ Gestiune</div>
+</div>
+
+<div id="page-comenzi" class="page">
+    <div class="section-title">🔍 Caută produse</div>
+    <div class="search-box"><span class="ico">🔍</span><input id="global-search" placeholder="Caută orice produs (ex: ciuperci)..." oninput="doGlobalSearch()"></div>
+    <div id="global-results" style="display:none"></div>
+
+    <div class="section-title">Mod comandă</div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" onclick="orderMode='supplier';renderComenzi()">📦 Pe Furnizor</button>
+      <button class="mode-btn " onclick="orderMode='location';renderComenzi()">📍 Pe Punct de Lucru</button>
+    </div>
+    <div id="mode-content"><div class="search-box"><span class="ico">🔍</span><input id="search-supplier" placeholder="Caută furnizor..." oninput="filterSuppliersHome()"></div><div id="suppliers-list"><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoiui8kz')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">AGROSERV MARIUTA SA</div><div class="card-sub">4 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoijc2zy')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">ALEXIA  AMBALAJ S.R.L.</div><div class="card-sub">5 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi3rqdl')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">AQUILA PART PROD COM S.A.</div><div class="card-sub">2 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoilm393')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">Annabella Fabrica de Conserve Raureni SA</div><div class="card-sub">9 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoixrzs3')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">BAKE STORE SRL</div><div class="card-sub">7 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoiamud6')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">BULGARIAN CONCEPT DISTRIBUTION S.R.L.</div><div class="card-sub">3 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoimkyad')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">BUNICELRO SRL</div><div class="card-sub">9 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoifhi3y')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">CARREFOUR ROMANIA SA</div><div class="card-sub">2 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoizzw23')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">COCA-COLA HBC ROMANIA S.R.L.</div><div class="card-sub">29 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoim9lxt')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">CRIS-TIM FAMILY HOLDING S.A.</div><div class="card-sub">4 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoilxoep')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">CT INTERNATIONAL SPEDITION SRL</div><div class="card-sub">1 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoiduxyq')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">D.L.D. 2000 DISTRIBUTION  SRL</div><div class="card-sub">5 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoilqbqb')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">DOLIMAR TRIO SOY SRL</div><div class="card-sub">28 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoin20o5')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">EXCELSIOR GRAPHICS PRINT SRL</div><div class="card-sub">20 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoix7eaw')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">FRULEG LOGISTIC SRL</div><div class="card-sub">24 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi9gizm')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">GLOBAL PAPER BAGS S.R.L.</div><div class="card-sub">5 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi38ai4')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">GUSTA PRO ROMANIA S.R.L.</div><div class="card-sub">1 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoivj7iw')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">HYGIENE PLUS SRL</div><div class="card-sub">41 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoiliecv')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">JOSI LOGISTIC SRL</div><div class="card-sub">14 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoirkssf')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">KOOPERATIVA NOUA S.R.L.</div><div class="card-sub">1 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi21qu4')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">LA MIRCEA MACELARU</div><div class="card-sub">4 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi7r0pv')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">MARATHON DISTRIBUTION GROUP S.R.L.</div><div class="card-sub">28 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi4cbd3')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">MERISA SHOP S.R.L.</div><div class="card-sub">11 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoiao64g')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">METRO CASH &amp; CARRY ROMANIA SRL</div><div class="card-sub">51 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoij8xrg')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">Mega Image SRL</div><div class="card-sub">4 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoivsb7s')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">NOVA PAN SRL</div><div class="card-sub">2 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi34mm1')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">Nordic Import Export CO</div><div class="card-sub">12 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoiingpn')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">OLD TEAM DISTRIBUTION SRL</div><div class="card-sub">8 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi0f3is')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">OMNIA GUSTI SRL</div><div class="card-sub">60 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoilvcoq')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">PARMAFOOD GROUP DISTRIBUTION SRL</div><div class="card-sub">20 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi3t6fw')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">PREMIUM FRUCT SRL</div><div class="card-sub">8 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoicrooi')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">PRODUSE PE BUNE MCD S.R.L.</div><div class="card-sub">1 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoizu9dt')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">S.C. ALMA TIM DISTRIBUTION S.R.L.</div><div class="card-sub">3 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi24hb4')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">S.C. AVICII DISTRIBUTION S.R.L</div><div class="card-sub">22 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoik3hiq')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">SC ORGANIC LINNEA SRL</div><div class="card-sub">2 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoiz8ldi')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">SC TAPP GELATO SRL</div><div class="card-sub">32 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi01v4w')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">SLANIC MUSCEL AGROINDUSTRIAL COMPLEX SRL</div><div class="card-sub">4 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoij6lj4')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">SOCIETATEA ARBITRARA DE METALURGIE INDUSTRIALA SI RELATII DE AFACERI S.A.M.I.R.A SRL</div><div class="card-sub">25 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoie019h')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">SONIMPEX TOPOLOVENI SRL</div><div class="card-sub">8 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi19u3e')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">STIL AMBALAJ SRL</div><div class="card-sub">1 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi22s39')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">SUNDAY BITES SRL</div><div class="card-sub">1 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoi9fql5')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">TRANSILVANIA NUTS</div><div class="card-sub">1 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div><div class="card"><div class="card-head" onclick="startSupplierOrder('mpm5vmoie21xj')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">UNITED ROMANIAN BREWERIES BEREPROD SRL</div><div class="card-sub">4 produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div></div></div></div>
+<div id="page-istoric" class="page"></div>
+<div id="page-gestiune" class="page active"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div class="section-title" style="margin:0">Furnizori (43)</div>
+    <button class="btn btn-primary btn-sm" onclick="addSupplierModal()">+ Furnizor</button>
+  </div>
+  <div class="search-box"><span class="ico">🔍</span><input id="search-gestiune" placeholder="Caută furnizor..." oninput="filterGestiune()"></div>
+  <div id="gestiune-list"><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoiui8kz')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">AGROSERV MARIUTA SA</div><div class="card-sub">4 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoiui8kz')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoiui8kz')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoijc2zy')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">ALEXIA  AMBALAJ S.R.L.</div><div class="card-sub">5 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoijc2zy')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoijc2zy')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi3rqdl')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">AQUILA PART PROD COM S.A.</div><div class="card-sub">2 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi3rqdl')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi3rqdl')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoilm393')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">Annabella Fabrica de Conserve Raureni SA</div><div class="card-sub">9 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoilm393')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoilm393')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoixrzs3')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">BAKE STORE SRL</div><div class="card-sub">7 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoixrzs3')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoixrzs3')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoiamud6')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">BULGARIAN CONCEPT DISTRIBUTION S.R.L.</div><div class="card-sub">3 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoiamud6')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoiamud6')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoimkyad')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">BUNICELRO SRL</div><div class="card-sub">9 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoimkyad')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoimkyad')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoifhi3y')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">CARREFOUR ROMANIA SA</div><div class="card-sub">2 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoifhi3y')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoifhi3y')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoizzw23')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">COCA-COLA HBC ROMANIA S.R.L.</div><div class="card-sub">29 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoizzw23')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoizzw23')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoim9lxt')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">CRIS-TIM FAMILY HOLDING S.A.</div><div class="card-sub">4 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoim9lxt')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoim9lxt')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoilxoep')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">CT INTERNATIONAL SPEDITION SRL</div><div class="card-sub">1 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoilxoep')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoilxoep')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoiduxyq')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">D.L.D. 2000 DISTRIBUTION  SRL</div><div class="card-sub">5 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoiduxyq')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoiduxyq')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoilqbqb')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">DOLIMAR TRIO SOY SRL</div><div class="card-sub">28 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoilqbqb')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoilqbqb')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoin20o5')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">EXCELSIOR GRAPHICS PRINT SRL</div><div class="card-sub">20 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoin20o5')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoin20o5')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoix7eaw')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">FRULEG LOGISTIC SRL</div><div class="card-sub">24 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoix7eaw')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoix7eaw')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi9gizm')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">GLOBAL PAPER BAGS S.R.L.</div><div class="card-sub">5 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi9gizm')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi9gizm')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi38ai4')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">GUSTA PRO ROMANIA S.R.L.</div><div class="card-sub">1 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi38ai4')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi38ai4')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoivj7iw')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">HYGIENE PLUS SRL</div><div class="card-sub">41 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoivj7iw')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoivj7iw')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoiliecv')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">JOSI LOGISTIC SRL</div><div class="card-sub">14 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoiliecv')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoiliecv')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoirkssf')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">KOOPERATIVA NOUA S.R.L.</div><div class="card-sub">1 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoirkssf')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoirkssf')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi21qu4')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">LA MIRCEA MACELARU</div><div class="card-sub">4 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi21qu4')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi21qu4')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi7r0pv')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">MARATHON DISTRIBUTION GROUP S.R.L.</div><div class="card-sub">28 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi7r0pv')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi7r0pv')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi4cbd3')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">MERISA SHOP S.R.L.</div><div class="card-sub">11 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi4cbd3')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi4cbd3')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoiao64g')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">METRO CASH &amp; CARRY ROMANIA SRL</div><div class="card-sub">51 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoiao64g')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoiao64g')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoij8xrg')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">Mega Image SRL</div><div class="card-sub">4 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoij8xrg')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoij8xrg')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoivsb7s')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">NOVA PAN SRL</div><div class="card-sub">2 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoivsb7s')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoivsb7s')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi34mm1')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">Nordic Import Export CO</div><div class="card-sub">12 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi34mm1')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi34mm1')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoiingpn')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">OLD TEAM DISTRIBUTION SRL</div><div class="card-sub">8 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoiingpn')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoiingpn')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi0f3is')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">OMNIA GUSTI SRL</div><div class="card-sub">60 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi0f3is')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi0f3is')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoilvcoq')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">PARMAFOOD GROUP DISTRIBUTION SRL</div><div class="card-sub">20 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoilvcoq')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoilvcoq')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi3t6fw')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">PREMIUM FRUCT SRL</div><div class="card-sub">8 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi3t6fw')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi3t6fw')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoicrooi')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">PRODUSE PE BUNE MCD S.R.L.</div><div class="card-sub">1 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoicrooi')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoicrooi')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoizu9dt')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">S.C. ALMA TIM DISTRIBUTION S.R.L.</div><div class="card-sub">3 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoizu9dt')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoizu9dt')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi24hb4')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">S.C. AVICII DISTRIBUTION S.R.L</div><div class="card-sub">22 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi24hb4')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi24hb4')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoik3hiq')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">SC ORGANIC LINNEA SRL</div><div class="card-sub">2 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoik3hiq')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoik3hiq')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoiz8ldi')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">SC TAPP GELATO SRL</div><div class="card-sub">32 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoiz8ldi')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoiz8ldi')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi01v4w')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">SLANIC MUSCEL AGROINDUSTRIAL COMPLEX SRL</div><div class="card-sub">4 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi01v4w')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi01v4w')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoij6lj4')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">SOCIETATEA ARBITRARA DE METALURGIE INDUSTRIALA SI RELATII DE AFACERI S.A.M.I.R.A SRL</div><div class="card-sub">25 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoij6lj4')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoij6lj4')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoie019h')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">SONIMPEX TOPOLOVENI SRL</div><div class="card-sub">8 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoie019h')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoie019h')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi19u3e')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">STIL AMBALAJ SRL</div><div class="card-sub">1 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi19u3e')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi19u3e')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi22s39')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">SUNDAY BITES SRL</div><div class="card-sub">1 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi22s39')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi22s39')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoi9fql5')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">TRANSILVANIA NUTS</div><div class="card-sub">1 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoi9fql5')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoi9fql5')">🗑️</button></div>
+    </div></div><div class="card"><div class="card-head" onclick="openSupplierDetail('mpm5vmoie21xj')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">UNITED ROMANIAN BREWERIES BEREPROD SRL</div><div class="card-sub">4 produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('mpm5vmoie21xj')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('mpm5vmoie21xj')">🗑️</button></div>
+    </div></div></div>
+  <div style="margin-top:20px;display:flex;flex-direction:column;gap:10px;align-items:center">
+    <button class="btn btn-success btn-sm btn-block" onclick="exportApp()" style="max-width:320px">📤 Exportă aplicația (cu modificări)</button>
+    <button class="btn btn-outline btn-sm" onclick="exportData()" style="max-width:320px">💾 Exportă doar datele (JSON)</button>
+    <button class="btn btn-outline btn-sm" onclick="importData()" style="max-width:320px">📥 Importă date (JSON)</button>
+    <button class="btn btn-outline btn-sm" onclick="resetData()" style="color:var(--danger);border-color:var(--danger);max-width:320px">🔄 Resetează la date implicite</button>
+  </div>
+  <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)"></div>
+<div id="modal-container"></div>
+
+<script>
+const UNITS=['buc','kg','g','L','ml','bax','navetă','cutie','pachet','placa','bidon','rola','set','sac','plic','tub'];
+
+const LOCATIONS=[
+  {id:'scv',name:'Scovergaria Micai',emoji:'🥐'},
+  {id:'ld',name:'Lingurițe Dulci',emoji:'🥄'},
+  {id:'lab',name:'Laborator Patiserie',emoji:'🧁'}
+];
+
+const DEFAULT_SUPPLIERS=[{"name":"AGROSERV MARIUTA SA","products":[{"name":"AYRAN LAPTARIA CU CAIMAC","unit":"buc"},{"name":"Branza dulce MP","unit":"buc"},{"name":"KEFIR LAPTARIA CU CAIMAC","unit":"buc"},{"name":"SANA LAPTARIA CU CAIMAC","unit":"buc"}]},{"name":"ALEXIA  AMBALAJ S.R.L.","products":[{"name":"CHESA ALUMINIU COZONAC","unit":"buc"},{"name":"CUTIE 1 PRAJITURA","unit":"buc"},{"name":"SERVETELE","unit":"buc"},{"name":"SET TACAM UNICA FOLOSINTA","unit":"buc"},{"name":"TAVITA 4 PRAJITURI","unit":"buc"}]},{"name":"AQUILA PART PROD COM S.A.","products":[{"name":"Nutella MP","unit":"buc"},{"name":"Snitel de pui MP","unit":"buc"}]},{"name":"Annabella Fabrica de Conserve Raureni SA","products":[{"name":"Dulceata afine MP","unit":"buc"},{"name":"Dulceata capsuni MP","unit":"buc"},{"name":"Dulceata de visine","unit":"buc"},{"name":"Dulceata de visine MP","unit":"buc"},{"name":"Dulceata visine MP","unit":"buc"},{"name":"Gem caise MP","unit":"buc"},{"name":"Gem cirese MP","unit":"buc"},{"name":"Gogosari in otet MP","unit":"buc"},{"name":"Magiun de prune fara zahar adaugat MP","unit":"buc"}]},{"name":"BAKE STORE SRL","products":[{"name":"Cacao pudra MP","unit":"buc"},{"name":"Ciocolata alba MP","unit":"buc"},{"name":"Ciocolata cu lapte MP","unit":"buc"},{"name":"Ciocolata neagra MP","unit":"buc"},{"name":"Pasta lamaie MP","unit":"buc"},{"name":"Pasta portocale MP","unit":"buc"},{"name":"Portocala confiata MP","unit":"buc"}]},{"name":"BULGARIAN CONCEPT DISTRIBUTION S.R.L.","products":[{"name":"Branza de burduf MP","unit":"buc"},{"name":"Branza dulce MP","unit":"buc"},{"name":"Cascaval MP","unit":"buc"}]},{"name":"BUNICELRO SRL","products":[{"name":"CIOCOLATA DE CASA CU ALUNE BUNICEL 212G","unit":"buc"},{"name":"CREMA CIOCOLATA DE CASA BUNICEL 212G","unit":"buc"},{"name":"DULCEATA ARDEI IUTE BUNICEL","unit":"buc"},{"name":"DULCEATA LAPTE CU MERISOARE BUNICEL","unit":"buc"},{"name":"DULCEATA LAPTE SI CIOCOLATA NEAGRA BUNICEL","unit":"buc"},{"name":"DULCEATA NUCI VERZI BUNICEL","unit":"buc"},{"name":"GEM DE GUTUI BUNICEL 212 GR","unit":"buc"},{"name":"GEM DE PIERSICI SI CAISE BUNICEL 212 GR","unit":"buc"},{"name":"GEM PRUNE FARA ZAHAR BUNICEL","unit":"buc"}]},{"name":"CARREFOUR ROMANIA SA","products":[{"name":"CASEROLA BIO DUBLA PATISERIE","unit":"buc"},{"name":"Cascaval MP","unit":"buc"}]},{"name":"COCA-COLA HBC ROMANIA S.R.L.","products":[{"name":"Apa minerala MP","unit":"buc"},{"name":"Apa plata MP","unit":"buc"},{"name":"CAPPY PIERSICI 0,25L","unit":"buc"},{"name":"CAPPY PORTOCALE 0,25L","unit":"buc"},{"name":"CAPPY PULPY GRAPEFRUIT 0,33L","unit":"buc"},{"name":"CAPPY PULPY PIERSICA 0,33L","unit":"buc"},{"name":"CAPPY PULPY PORTOCALE 0,33L","unit":"buc"},{"name":"CAPPY VISINE 0,25L","unit":"buc"},{"name":"COCA COLA 0,25L","unit":"buc"},{"name":"COCA COLA 0,5L","unit":"buc"},{"name":"DORNA MINERALA 0,5L","unit":"buc"},{"name":"FANTA LAMAIE 0,5L","unit":"buc"},{"name":"FANTA PERE 0,5L","unit":"buc"},{"name":"FANTA PORTOCALE 0,5L","unit":"buc"},{"name":"FANTA STRUGURI 0,25L","unit":"buc"},{"name":"FANTA STRUGURI 0,5L","unit":"buc"},{"name":"FANTA TROPICAL 0,5 L","unit":"buc"},{"name":"FUZE TEA CEAI VERDE 0,5L","unit":"buc"},{"name":"FUZE TEA FRUCTE PADURE 0,5L","unit":"buc"},{"name":"FUZE TEA LAMAIE 0,5L","unit":"buc"},{"name":"FUZE TEA PIERSICI 0,5L","unit":"buc"},{"name":"IZVORUL ALB 0,33L","unit":"buc"},{"name":"IZVORUL ALB 0,5L","unit":"buc"},{"name":"SCHWEPPES BITTER LEMON 0,5L","unit":"buc"},{"name":"SCHWEPPES MANDARIN 0,5L","unit":"buc"},{"name":"SCHWEPPES TONIC 0,5L","unit":"buc"},{"name":"SCHWEPPES ZMEURA 0,5L","unit":"buc"},{"name":"SPRITE 0,25L","unit":"buc"},{"name":"SPRITE 0,5L","unit":"buc"}]},{"name":"CRIS-TIM FAMILY HOLDING S.A.","products":[{"name":"Cremwursti MP","unit":"buc"},{"name":"Parizer de pui MP","unit":"buc"},{"name":"Salam Victoria MP","unit":"buc"},{"name":"Sunca presata MP","unit":"buc"}]},{"name":"CT INTERNATIONAL SPEDITION SRL","products":[{"name":"Merisoare deshidratate MP","unit":"buc"}]},{"name":"D.L.D. 2000 DISTRIBUTION  SRL","products":[{"name":"CUTIE TORT MICA 20X20CM","unit":"buc"},{"name":"FOLIE ACETOFAN","unit":"buc"},{"name":"FOLIE ALIMENTARA","unit":"buc"},{"name":"HARTIE DE COPT","unit":"buc"},{"name":"PAHAR SAVARINA/PROFITEROL","unit":"buc"}]},{"name":"DOLIMAR TRIO SOY SRL","products":[{"name":"CAPAC PAHAR CAFEA MARE","unit":"buc"},{"name":"CAPAC PAHAR ESPRESSO","unit":"buc"},{"name":"COFRAJ 2 PAHARE","unit":"buc"},{"name":"COFRAJ 4 PAHARE","unit":"buc"},{"name":"Cafea boabe MP","unit":"buc"},{"name":"Cafea decaf MP","unit":"buc"},{"name":"Ceai Blueberry Cream","unit":"buc"},{"name":"Ceai English Breakfast","unit":"buc"},{"name":"Ceai Exotic Dreams","unit":"buc"},{"name":"Ceai Ginger Honey","unit":"buc"},{"name":"Ceai Green Lemon Mint","unit":"buc"},{"name":"Ceai Herbal Chai","unit":"buc"},{"name":"Ceai Rooibos Vanilla","unit":"buc"},{"name":"Ceai bio Green Tea Jasmin","unit":"buc"},{"name":"Ciocolata calda alba MP","unit":"buc"},{"name":"Ciocolata calda cu lapte MP","unit":"buc"},{"name":"Ciocolata calda neagra MP","unit":"buc"},{"name":"MIERE PLIC","unit":"buc"},{"name":"PAHAR CARTON CAFEA MARE","unit":"buc"},{"name":"PAHAR CARTON CAFEA MIC","unit":"buc"},{"name":"PAHAR CARTON ESPRESSO","unit":"buc"},{"name":"PALETINE CAFEA","unit":"buc"},{"name":"Sirop caramel Monin MP","unit":"buc"},{"name":"Sirop ciocolata Monin MP","unit":"buc"},{"name":"Sirop irish Monin MP","unit":"buc"},{"name":"Sirop vanilie Monin MP","unit":"buc"},{"name":"Topping caramel Monin","unit":"buc"},{"name":"ZAHAR BRUN STICK","unit":"buc"}]},{"name":"EXCELSIOR GRAPHICS PRINT SRL","products":[{"name":"CHESA ALUMINIU COZONAC","unit":"buc"},{"name":"CHESA CARTON CERC","unit":"buc"},{"name":"CHESA CARTON ECLER","unit":"buc"},{"name":"CUTIE 0,5KG","unit":"buc"},{"name":"CUTIE 1 PRAJITURA","unit":"buc"},{"name":"CUTIE 1KG","unit":"buc"},{"name":"CUTIE 2 PRAJITURI","unit":"buc"},{"name":"CUTIE MACARONSX4","unit":"buc"},{"name":"CUTIE MACARONSX5","unit":"buc"},{"name":"CUTIE MACARONSX6","unit":"buc"},{"name":"CUTIE MACARONSX8","unit":"buc"},{"name":"CUTIE MARTISORX1","unit":"buc"},{"name":"CUTIE MARTISORX2","unit":"buc"},{"name":"CUTIE TORT MARE 27,5X27,5CM","unit":"buc"},{"name":"DISC TORT MEDIU 28CM","unit":"buc"},{"name":"DISC TORT MIC 26CM","unit":"buc"},{"name":"TAVITA 2 PRAJITURI","unit":"buc"},{"name":"TAVITA 4 PRAJITURI","unit":"buc"},{"name":"TAVITA PLATOU 1,5KG","unit":"buc"},{"name":"TAVITA PLATOU 1KG","unit":"buc"}]},{"name":"FRULEG LOGISTIC SRL","products":[{"name":"Afine MP","unit":"buc"},{"name":"Banana MP","unit":"buc"},{"name":"Capsuni MP","unit":"buc"},{"name":"Cartofi MP","unit":"buc"},{"name":"Ceapa rosie MP","unit":"buc"},{"name":"Coacaze rosii MP","unit":"buc"},{"name":"Dovleac placintar MP","unit":"buc"},{"name":"Gutui MP","unit":"buc"},{"name":"Kiwi MP","unit":"buc"},{"name":"Lamai MP","unit":"buc"},{"name":"Lime MP","unit":"buc"},{"name":"Mango MP","unit":"buc"},{"name":"Marar MP","unit":"buc"},{"name":"Menta MP","unit":"buc"},{"name":"Mere MP","unit":"buc"},{"name":"Mure MP","unit":"buc"},{"name":"Patrunjel MP","unit":"buc"},{"name":"Pere MP","unit":"buc"},{"name":"Physallys mp","unit":"buc"},{"name":"Portocale MP","unit":"buc"},{"name":"Rosii cherry MP","unit":"buc"},{"name":"Varza alba MP","unit":"buc"},{"name":"Zmeura MP","unit":"buc"},{"name":"flori comestibile","unit":"buc"}]},{"name":"GLOBAL PAPER BAGS S.R.L.","products":[{"name":"PUNGA ALBA MARE","unit":"buc"},{"name":"PUNGA ALBA MICA","unit":"buc"},{"name":"PUNGA COCOCI PERSONALIZATA","unit":"buc"},{"name":"PUNGA L","unit":"buc"},{"name":"PUNGA S","unit":"buc"}]},{"name":"GUSTA PRO ROMANIA S.R.L.","products":[{"name":"Ciocolata neagra fara zahar MP","unit":"buc"}]},{"name":"HYGIENE PLUS SRL","products":[{"name":"BURETE TEFLON","unit":"buc"},{"name":"BURETI VASE","unit":"buc"},{"name":"CASEROLA BIO DUBLA PATISERIE","unit":"buc"},{"name":"CASEROLA MONO CARTON PATISERIE","unit":"buc"},{"name":"CIF PASTA","unit":"buc"},{"name":"CLORAMINA","unit":"buc"},{"name":"DETERGENT GEAMURI","unit":"buc"},{"name":"DETERGENT INOX","unit":"buc"},{"name":"DETERGENT PARDOSELI","unit":"buc"},{"name":"DETERGENT VASE","unit":"buc"},{"name":"DOMESTOS","unit":"buc"},{"name":"FARFURII UNICA FOLOSINTA","unit":"buc"},{"name":"HALAT UNICA FOLOSINTA","unit":"buc"},{"name":"HARTIE IGIENICA","unit":"buc"},{"name":"LAVETE MICROFIBRA","unit":"buc"},{"name":"LINGURITE UNICA FOLOSINTA","unit":"buc"},{"name":"MANUSI MENAJ L","unit":"buc"},{"name":"MANUSI MENAJ M","unit":"buc"},{"name":"MANUSI MENAJ XL","unit":"buc"},{"name":"MANUSI NITRIL L","unit":"buc"},{"name":"MANUSI NITRIL M","unit":"buc"},{"name":"MANUSI NITRIL S","unit":"buc"},{"name":"MANUSI NITRIL XL","unit":"buc"},{"name":"MANUSI UNICA  FOLOSINTA","unit":"buc"},{"name":"PAHAR PLASTIC FRESH PORTOCALE 290ML","unit":"buc"},{"name":"PAIE","unit":"buc"},{"name":"PRODER DEGRAS","unit":"buc"},{"name":"PRODER DUR","unit":"buc"},{"name":"PRODER SHINE","unit":"buc"},{"name":"PROSOAPE MAINI ROLA","unit":"buc"},{"name":"PROSOAPE MAINI Z","unit":"buc"},{"name":"REZERVA MOP","unit":"buc"},{"name":"SACI 320 L","unit":"buc"},{"name":"SACI GUNOI 120L","unit":"buc"},{"name":"SACI GUNOI 60L","unit":"buc"},{"name":"SANO FORTE","unit":"buc"},{"name":"SERVETELE","unit":"buc"},{"name":"SET TACAM UNICA FOLOSINTA","unit":"buc"},{"name":"SET WC","unit":"buc"},{"name":"SORTURI UNICA FOLOSINTA","unit":"buc"},{"name":"SOSIERA","unit":"buc"}]},{"name":"JOSI LOGISTIC SRL","products":[{"name":"Bacon MP","unit":"buc"},{"name":"Branza dulce MP","unit":"buc"},{"name":"Ciuperci feliate conserva MP","unit":"buc"},{"name":"Iaurt grecesc MP","unit":"buc"},{"name":"Lapte 3,5% MP","unit":"buc"},{"name":"Masline negre rondele MP","unit":"buc"},{"name":"Oua calibru L MP","unit":"buc"},{"name":"Smantana MP","unit":"buc"},{"name":"Snitel de pui MP","unit":"buc"},{"name":"Sunculita taraneasca MP","unit":"buc"},{"name":"Telemea de capra MP","unit":"buc"},{"name":"Telemea de vaca eco MP","unit":"buc"},{"name":"Telemea moldoveneasca (umpluturi) MP","unit":"buc"},{"name":"Varza murata MP","unit":"buc"}]},{"name":"KOOPERATIVA NOUA S.R.L.","products":[{"name":"SOCATA","unit":"buc"}]},{"name":"LA MIRCEA MACELARU","products":[{"name":"Carnati MP","unit":"buc"},{"name":"Carne de lucru porc MP","unit":"buc"},{"name":"Carne tocata de porc MP","unit":"buc"},{"name":"Pulpe de pui superioare dezosate MP","unit":"buc"}]},{"name":"MARATHON DISTRIBUTION GROUP S.R.L.","products":[{"name":"Amarene confiate MP","unit":"buc"},{"name":"Bors MP","unit":"buc"},{"name":"Castraveti in otet MP","unit":"buc"},{"name":"Ceapa alba MP","unit":"buc"},{"name":"Ciocolata alba MP","unit":"buc"},{"name":"Ciocolata alba fara zahar MP","unit":"buc"},{"name":"Ciocolata calda neagra MP","unit":"buc"},{"name":"Ciocolata cu lapte MP","unit":"buc"},{"name":"Ciocolata neagra MP","unit":"buc"},{"name":"Ciocolata neagra fara zahar MP","unit":"buc"},{"name":"Ciuperci feliate conserva MP","unit":"buc"},{"name":"Coaja de portocala MP","unit":"buc"},{"name":"Crema de branza MP","unit":"buc"},{"name":"Crema nocciola Callebaut MP","unit":"buc"},{"name":"Esenta rom MP","unit":"buc"},{"name":"Esenta vanilie MP","unit":"buc"},{"name":"Gris MP","unit":"buc"},{"name":"Otet de mere MP","unit":"buc"},{"name":"Oua calibru L MP","unit":"buc"},{"name":"Porumb boabe conserva MP","unit":"buc"},{"name":"Rahat MP","unit":"buc"},{"name":"Sare MP","unit":"buc"},{"name":"Smantana frisca interior","unit":"buc"},{"name":"Spray gel fructe MP","unit":"buc"},{"name":"Stafide MP","unit":"buc"},{"name":"Sticks ciocolata MP","unit":"buc"},{"name":"Ton MP","unit":"buc"},{"name":"Zahar alb MP","unit":"buc"}]},{"name":"MERISA SHOP S.R.L.","products":[{"name":"CIFRA 0","unit":"buc"},{"name":"CIFRA 1","unit":"buc"},{"name":"CIFRA 2","unit":"buc"},{"name":"CIFRA 3","unit":"buc"},{"name":"CIFRA 4","unit":"buc"},{"name":"CIFRA 5","unit":"buc"},{"name":"CIFRA 6","unit":"buc"},{"name":"CIFRA 7","unit":"buc"},{"name":"CIFRA 8","unit":"buc"},{"name":"CIFRA 9","unit":"buc"},{"name":"LUMANARE FORMA DIVERSA","unit":"buc"}]},{"name":"METRO CASH & CARRY ROMANIA SRL","products":[{"name":"Arpacas MP","unit":"buc"},{"name":"Bicarbonat de amoniu MP","unit":"buc"},{"name":"Bicarbonat de sodiu MP","unit":"buc"},{"name":"Biscuiti biscoff MP","unit":"buc"},{"name":"Boia de ardei dulce MP","unit":"buc"},{"name":"CASEROLA BIO DUBLA PATISERIE","unit":"buc"},{"name":"CASEROLA MONO CARTON PATISERIE","unit":"buc"},{"name":"CIF PASTA","unit":"buc"},{"name":"Carnati MP","unit":"buc"},{"name":"Chimen MP","unit":"buc"},{"name":"Compot mix de fructe tropicale MP","unit":"buc"},{"name":"Crema de branza MP","unit":"buc"},{"name":"Disaronno MP","unit":"buc"},{"name":"FARFURII UNICA FOLOSINTA","unit":"buc"},{"name":"Gem caise MP","unit":"buc"},{"name":"Gris MP","unit":"buc"},{"name":"IZVORUL ALB 0,5L","unit":"buc"},{"name":"Iaurt grecesc MP","unit":"buc"},{"name":"Ketchup MP","unit":"buc"},{"name":"Lapte cocos MP","unit":"buc"},{"name":"MANUSI NITRIL S","unit":"buc"},{"name":"MANUSI UNICA  FOLOSINTA","unit":"buc"},{"name":"Malai MP","unit":"buc"},{"name":"Merisoare deshidratate MP","unit":"buc"},{"name":"Nuca de cocos fulgi MP","unit":"buc"},{"name":"Nutella MP","unit":"buc"},{"name":"Oregano MP","unit":"buc"},{"name":"Orez mp","unit":"buc"},{"name":"Parizer de pui MP","unit":"buc"},{"name":"Pasta tahini MP","unit":"buc"},{"name":"Pesmet MP","unit":"buc"},{"name":"Piper negru macinat MP","unit":"buc"},{"name":"Piscoturi MP","unit":"buc"},{"name":"Praf de copt MP","unit":"buc"},{"name":"SANO FORTE","unit":"buc"},{"name":"SERVETELE CUTIE","unit":"buc"},{"name":"SET TACAM UNICA FOLOSINTA","unit":"buc"},{"name":"Salam Victoria MP","unit":"buc"},{"name":"Sare MP","unit":"buc"},{"name":"Seminte de mac MP","unit":"buc"},{"name":"Seminte de susan MP","unit":"buc"},{"name":"Sos de rosii MP","unit":"buc"},{"name":"Sos remoulade MP","unit":"buc"},{"name":"Spanac congelat MP","unit":"buc"},{"name":"Ulei de floarea-soarelui MP","unit":"buc"},{"name":"Usturoi pudra MP","unit":"buc"},{"name":"Visine congelate MP","unit":"buc"},{"name":"ZAHAR BRUN STICK","unit":"buc"},{"name":"Zahar alb MP","unit":"buc"},{"name":"Zahar brun MP","unit":"buc"},{"name":"Zahar vanilat MP","unit":"buc"}]},{"name":"Mega Image SRL","products":[{"name":"Afine MP","unit":"buc"},{"name":"Capsuni MP","unit":"buc"},{"name":"Coacaze rosii MP","unit":"buc"},{"name":"Mure MP","unit":"buc"}]},{"name":"NOVA PAN SRL","products":[{"name":"SPRAY VELVET ROSU","unit":"buc"},{"name":"SPRAY VELVET VERDE","unit":"buc"}]},{"name":"Nordic Import Export CO","products":[{"name":"Colorant bleu","unit":"buc"},{"name":"Colorant portocaliu","unit":"buc"},{"name":"Colorant rosu","unit":"buc"},{"name":"Colorant roz","unit":"buc"},{"name":"Colorant verde","unit":"buc"},{"name":"Compot mix de fructe tropicale MP","unit":"buc"},{"name":"Esenta rom MP","unit":"buc"},{"name":"Esenta vanilie MP","unit":"buc"},{"name":"Galbenus de ou MP","unit":"buc"},{"name":"Mini-pateuri cu branza KG","unit":"buc"},{"name":"POS 55CM","unit":"buc"},{"name":"Zahar pudra decor MP","unit":"buc"}]},{"name":"OLD TEAM DISTRIBUTION SRL","products":[{"name":"FENTIMANS GENTLY SPARKLING","unit":"buc"},{"name":"FENTIMANS GINGER BEER","unit":"buc"},{"name":"FENTIMANS ROSE LEMONADE","unit":"buc"},{"name":"FENTIMANS SPARKLING RASPBERRY","unit":"buc"},{"name":"GARANTIE SGR","unit":"buc"},{"name":"MELLOW APPLE&LIME","unit":"buc"},{"name":"MELLOW MANGO","unit":"buc"},{"name":"MELLOW ORANGE","unit":"buc"}]},{"name":"OMNIA GUSTI SRL","products":[{"name":"Afine congelate MP","unit":"buc"},{"name":"Alune de padure MP","unit":"buc"},{"name":"Amarene confiate MP","unit":"buc"},{"name":"Capsuni congelate MP","unit":"buc"},{"name":"Coji ecler congelate mp","unit":"buc"},{"name":"Coji nuci congelate MP","unit":"buc"},{"name":"Colorant rosu","unit":"buc"},{"name":"Crema de fistic MP","unit":"buc"},{"name":"Crema nocciola Callebaut MP","unit":"buc"},{"name":"Dextroza MP","unit":"buc"},{"name":"Faina Carlina MP","unit":"buc"},{"name":"Faina Savoia MP","unit":"buc"},{"name":"Faina croissante MP","unit":"buc"},{"name":"Faina de migdale MP","unit":"buc"},{"name":"Faina pizza 00 MP","unit":"buc"},{"name":"Fondant MP","unit":"buc"},{"name":"Frisca&mascarpone MP","unit":"buc"},{"name":"Fructe de padure congelate MP","unit":"buc"},{"name":"Fulgi de migdale MP","unit":"buc"},{"name":"Galbenus de ou MP","unit":"buc"},{"name":"Gelatina MP","unit":"buc"},{"name":"Kataif MP","unit":"buc"},{"name":"Lamaie confiata MP","unit":"buc"},{"name":"Lapte condensat MP","unit":"buc"},{"name":"Lapte praf MP","unit":"buc"},{"name":"Mandarina confiata MP","unit":"buc"},{"name":"Mango congelat MP","unit":"buc"},{"name":"Mascarpone MP","unit":"buc"},{"name":"Mini tarte congelate MP","unit":"buc"},{"name":"Paiete ciocolata alba MP","unit":"buc"},{"name":"Paiete ciocolata neagra MP","unit":"buc"},{"name":"Pasta amarena MP","unit":"buc"},{"name":"Pasta capsuni MP","unit":"buc"},{"name":"Pasta fistic home-made","unit":"buc"},{"name":"Pasta mango MP","unit":"buc"},{"name":"Pasta mocha MP","unit":"buc"},{"name":"Pasta modelaj alba MP","unit":"buc"},{"name":"Pasta vanilie moroni MP","unit":"buc"},{"name":"Pasta wonder alba MP","unit":"buc"},{"name":"Pasta zmeura MP","unit":"buc"},{"name":"Pectina MP","unit":"buc"},{"name":"Piure capsuni MP","unit":"buc"},{"name":"Piure fructul pasiunii MP","unit":"buc"},{"name":"Piure lamaie MP","unit":"buc"},{"name":"Piure mango MP","unit":"buc"},{"name":"Piure pere MP","unit":"buc"},{"name":"Piure portocale MP","unit":"buc"},{"name":"Piure zmeura MP","unit":"buc"},{"name":"Sirop de glucoza MP","unit":"buc"},{"name":"Smantana frisca decor","unit":"buc"},{"name":"Smantana frisca interior","unit":"buc"},{"name":"Tarte dulci MP","unit":"buc"},{"name":"Unt crema MP","unit":"buc"},{"name":"Unt de arahide MP","unit":"buc"},{"name":"Unt de cacao MP","unit":"buc"},{"name":"Unt placa MP","unit":"buc"},{"name":"Visine congelate MP","unit":"buc"},{"name":"Zahar pudra decor MP","unit":"buc"},{"name":"Zahar pudra interior MP","unit":"buc"},{"name":"Zmeura congelata MP","unit":"buc"}]},{"name":"PARMAFOOD GROUP DISTRIBUTION SRL","products":[{"name":"6 GIACOBAZZI FRAGOLINO DOLCE 750ML","unit":"buc"},{"name":"7 GIACOBAZZI ROSE BRUT 750ML","unit":"buc"},{"name":"AFINATA BRAN 45ML","unit":"buc"},{"name":"Boia de ardei dulce MP","unit":"buc"},{"name":"CAISATA BRAN 45ML","unit":"buc"},{"name":"CAVA CABARET","unit":"buc"},{"name":"CORCOVA MIC CABERNET","unit":"buc"},{"name":"CORCOVA MIC ROSE","unit":"buc"},{"name":"CORCOVA MIC SAUVIGNON","unit":"buc"},{"name":"PALINCA PRUNE BRAN 45ML","unit":"buc"},{"name":"PROSECCO TERRA SERENA BRUT 200ML","unit":"buc"},{"name":"PROSECCO TERRA SERENA BRUT 750ML","unit":"buc"},{"name":"PROSECCO TERRA SERENA ROSE 200ML","unit":"buc"},{"name":"PROSECCO TERRA SERENA ROSE 750ML","unit":"buc"},{"name":"Piper negru macinat MP","unit":"buc"},{"name":"SMERENIE 750ML","unit":"buc"},{"name":"Scortisoara pudra MP","unit":"buc"},{"name":"Usturoi pudra MP","unit":"buc"},{"name":"VISINATA BRAN 45ML","unit":"buc"},{"name":"Vin pentru fiert MP","unit":"buc"}]},{"name":"PREMIUM FRUCT SRL","products":[{"name":"PROFRUCTTA LIMONADA CLASICA","unit":"buc"},{"name":"PROFRUCTTA LIMONADA CU MENTA","unit":"buc"},{"name":"PROFRUCTTA LIMONADA CU ZMEURA","unit":"buc"},{"name":"PROFRUCTTA SUC GRAPEFRUIT","unit":"buc"},{"name":"PROFRUCTTA SUC MANDARINE","unit":"buc"},{"name":"PROFRUCTTA SUC MERE","unit":"buc"},{"name":"PROFRUCTTA SUC PERE","unit":"buc"},{"name":"PROFRUCTTA SUC PORTOCALE","unit":"buc"}]},{"name":"PRODUSE PE BUNE MCD S.R.L.","products":[{"name":"Miere MP","unit":"buc"}]},{"name":"S.C. ALMA TIM DISTRIBUTION S.R.L.","products":[{"name":"PERONI 330 ML","unit":"buc"},{"name":"TIMISOREANA 0,33L","unit":"buc"},{"name":"URSUS 330 ML","unit":"buc"}]},{"name":"S.C. AVICII DISTRIBUTION S.R.L","products":[{"name":"Amidon MP","unit":"buc"},{"name":"Coaja de lamaie MP","unit":"buc"},{"name":"Drojdie proaspata MP","unit":"buc"},{"name":"Faina 550 MP","unit":"buc"},{"name":"Faina 550 S M MP","unit":"buc"},{"name":"Faina Contesa MP","unit":"buc"},{"name":"Faina Nobila MP","unit":"buc"},{"name":"Faina scovergi 650 MP","unit":"buc"},{"name":"Frisca decor","unit":"buc"},{"name":"Lapte praf MP","unit":"buc"},{"name":"Macaroane MP","unit":"buc"},{"name":"Miez de nuca macinata MP","unit":"buc"},{"name":"Rahat MP","unit":"buc"},{"name":"Scortisoara pudra MP","unit":"buc"},{"name":"Spanac congelat MP","unit":"buc"},{"name":"Stafide MP","unit":"buc"},{"name":"Ulei de floarea-soarelui MP","unit":"buc"},{"name":"Ulei high-oleic MP","unit":"buc"},{"name":"Unt de arahide MP","unit":"buc"},{"name":"Zahar pudra decor MP","unit":"buc"},{"name":"Zahar pudra interior MP","unit":"buc"},{"name":"Zahar vanilat MP","unit":"buc"}]},{"name":"SC ORGANIC LINNEA SRL","products":[{"name":"Ciocolata neagra fara zahar MP","unit":"buc"},{"name":"Stevia (green sugar) MP","unit":"buc"}]},{"name":"SC TAPP GELATO SRL","products":[{"name":"Base Libera 100","unit":"buc"},{"name":"Butter caramel salato MP","unit":"buc"},{"name":"Copertura straciatella MP","unit":"buc"},{"name":"Cornet 1 cupa","unit":"buc"},{"name":"Cornet 2/3 cupe","unit":"buc"},{"name":"Cornet special alune","unit":"buc"},{"name":"Cornet special sprinkles","unit":"buc"},{"name":"Deliziosa libera","unit":"buc"},{"name":"Dextroza MP","unit":"buc"},{"name":"Discuri krossis - napolitana","unit":"buc"},{"name":"Easy Cacao","unit":"buc"},{"name":"Frutta cremosa piu MP","unit":"buc"},{"name":"LINGURITE INGHETATA","unit":"buc"},{"name":"Lapte praf MP","unit":"buc"},{"name":"PAHAR 3 CUPE","unit":"buc"},{"name":"Pasta arahide libera","unit":"buc"},{"name":"Pasta caramel","unit":"buc"},{"name":"Pasta crema mascarpone MP","unit":"buc"},{"name":"Pasta crema siciliana MP","unit":"buc"},{"name":"Pasta de nuci MP","unit":"buc"},{"name":"Pasta fistic inghetata MP","unit":"buc"},{"name":"Pasta menta inghetata MP","unit":"buc"},{"name":"Pasta migdale","unit":"buc"},{"name":"Pasta superbiscotto","unit":"buc"},{"name":"Pasta vanilie inghetata MP","unit":"buc"},{"name":"Set core low calories frutta","unit":"buc"},{"name":"Variegato alune","unit":"buc"},{"name":"Variegato amarena MP","unit":"buc"},{"name":"Variegato caise","unit":"buc"},{"name":"Variegato galoflora dark","unit":"buc"},{"name":"Variegato pere","unit":"buc"},{"name":"Variegato portocala","unit":"buc"}]},{"name":"SLANIC MUSCEL AGROINDUSTRIAL COMPLEX SRL","products":[{"name":"RACHIU MERE 250ML SLANIC MUSCEL","unit":"buc"},{"name":"RACHIU MERE IMBATRANIT 52% ALCOOL SLANIC MUSCEL","unit":"buc"},{"name":"TUICA PRUNE 250ML SLANIC MUSCEL","unit":"buc"},{"name":"ZACUSCA LEGUME CU VINETE SLANIC MUSCEL","unit":"buc"}]},{"name":"SOCIETATEA ARBITRARA DE METALURGIE INDUSTRIALA SI RELATII DE AFACERI S.A.M.I.R.A SRL","products":[{"name":"Banana MP","unit":"buc"},{"name":"Capsuni MP","unit":"buc"},{"name":"Cartofi MP","unit":"buc"},{"name":"Ceapa alba MP","unit":"buc"},{"name":"Ceapa rosie MP","unit":"buc"},{"name":"Dovleac placintar MP","unit":"buc"},{"name":"Fistic crud MP","unit":"buc"},{"name":"Gutui MP","unit":"buc"},{"name":"Lamai MP","unit":"buc"},{"name":"Lapte 3,5% MP","unit":"buc"},{"name":"Marar MP","unit":"buc"},{"name":"Mere MP","unit":"buc"},{"name":"Miez de nuca macinata MP","unit":"buc"},{"name":"Patrunjel MP","unit":"buc"},{"name":"Pere MP","unit":"buc"},{"name":"Portocale MP","unit":"buc"},{"name":"Praz MP","unit":"buc"},{"name":"Rosii cherry MP","unit":"buc"},{"name":"Stafide MP","unit":"buc"},{"name":"Ulei de floarea-soarelui MP","unit":"buc"},{"name":"Ulei high-oleic MP","unit":"buc"},{"name":"Usturoi MP","unit":"buc"},{"name":"Varza alba MP","unit":"buc"},{"name":"Varza murata MP","unit":"buc"},{"name":"Zahar alb MP","unit":"buc"}]},{"name":"SONIMPEX TOPOLOVENI SRL","products":[{"name":"ARDEI CAPIA TOPOLOVENI","unit":"buc"},{"name":"DULCEATA AFINE TOPOLOVENI","unit":"buc"},{"name":"DULCEATA CAISE TOPOLOVENI","unit":"buc"},{"name":"DULCEATA CAPSUNI TOPOLOVENI","unit":"buc"},{"name":"DULCEATA TRANDAFIRI TOPOLOVENI","unit":"buc"},{"name":"DULCEATA VISINE TOPOLOVENI","unit":"buc"},{"name":"MAGIUN PRUNE TOPOLOVENI","unit":"buc"},{"name":"SFECLA ROSIE CU HREAN TOPOLOVENI","unit":"buc"}]},{"name":"STIL AMBALAJ SRL","products":[{"name":"CHESA ALUMINIU COZONAC","unit":"buc"}]},{"name":"SUNDAY BITES SRL","products":[{"name":"Unt de arahide MP","unit":"buc"}]},{"name":"TRANSILVANIA NUTS","products":[{"name":"Miez de nuca macinata MP","unit":"buc"}]},{"name":"UNITED ROMANIAN BREWERIES BEREPROD SRL","products":[{"name":"CIDRU AFINE SOMERSBY 330ML","unit":"buc"},{"name":"CIDRU MERE SOMERSBY 330ML","unit":"buc"},{"name":"CIDRU MURE SOMERSBY 330ML","unit":"buc"},{"name":"CIDRU PERE SOMERSBY 330ML","unit":"buc"}]}];
+
+// ── STORAGE ──
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function getSuppliers(){
+  let d=localStorage.getItem('mdmyr_suppliers_v3');
+  if(!d){
+    const init=DEFAULT_SUPPLIERS.map(s=>({id:uid(),name:s.name,products:s.products.map(p=>({id:uid(),name:p,unit:'buc'}))}));
+    localStorage.setItem('mdmyr_suppliers_v3',JSON.stringify(init));
+    return init;
+  }
+  let parsed=JSON.parse(d);
+  let changed=false;
+  parsed.forEach(s=>{(s.products||[]).forEach(p=>{if(!p.unit){p.unit='buc';changed=true}})});
+  if(changed) localStorage.setItem('mdmyr_suppliers_v3',JSON.stringify(parsed));
+  return parsed;
+}
+function saveSuppliers(s){localStorage.setItem('mdmyr_suppliers_v3',JSON.stringify(s))}
+function getHistory(){return JSON.parse(localStorage.getItem('mdmyr_history_v3')||'[]')}
+function saveHistory(h){localStorage.setItem('mdmyr_history_v3',JSON.stringify(h))}
+function unitOptions(sel){return UNITS.map(u=>`<option value="${u}"${u===sel?' selected':''}>${u}</option>`).join('')}
+
+function showToast(msg){
+  const old=document.querySelector('.toast');if(old)old.remove();
+  const t=document.createElement('div');t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),2200);
+}
+function showModal(html){
+  const c=document.getElementById('modal-container');
+  c.innerHTML='<div class="modal-overlay" id="modal-overlay"><div class="modal">'+html+'</div></div>';
+  document.getElementById('modal-overlay').addEventListener('click',e=>{if(e.target.id==='modal-overlay')closeModal()});
+}
+function closeModal(){document.getElementById('modal-container').innerHTML=''}
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
+function fmtDate(iso){const p=iso.split('-');return p[2]+'.'+p[1]+'.'+p[0]}
+function tomorrow(){const t=new Date();t.setDate(t.getDate()+1);return t.toISOString().slice(0,10)}
+
+// ── TABS ──
+let currentTab='comenzi';
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    currentTab=t.dataset.tab;
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+    document.getElementById('page-'+currentTab).classList.add('active');
+    renderPage();
+  });
+});
+function renderPage(){
+  if(currentTab==='comenzi') renderComenzi();
+  else if(currentTab==='istoric') renderIstoric();
+  else if(currentTab==='gestiune') renderGestiune();
+}
+
+// ══════════════════════════════════════════
+//  COMENZI — two modes + global search
+// ══════════════════════════════════════════
+let orderMode='supplier'; // 'supplier' or 'location'
+let orderView='home'; // 'home','supplierOrder','locOrder'
+
+// Supplier mode state
+let currentSupplierId=null;
+let orderQtys={}; // productId -> {locId: qty}
+let orderDeliveryDate=null;
+
+// Location mode state
+let currentLocationId=null;
+let locQtys={}; // supplierId:productId -> qty
+let locDeliveryDate=null;
+
+function renderComenzi(){
+  if(orderView==='supplierOrder') return renderSupplierOrder();
+  if(orderView==='locOrder') return renderLocOrder();
+  // HOME
+  const el=document.getElementById('page-comenzi');
+  let html=`
+    <div class="section-title">🔍 Caută produse</div>
+    <div class="search-box"><span class="ico">🔍</span><input id="global-search" placeholder="Caută orice produs (ex: ciuperci)..." oninput="doGlobalSearch()"></div>
+    <div id="global-results" style="display:none"></div>
+
+    <div class="section-title">Mod comandă</div>
+    <div class="mode-toggle">
+      <button class="mode-btn ${orderMode==='supplier'?'active':''}" onclick="orderMode='supplier';renderComenzi()">📦 Pe Furnizor</button>
+      <button class="mode-btn ${orderMode==='location'?'active':''}" onclick="orderMode='location';renderComenzi()">📍 Pe Punct de Lucru</button>
+    </div>
+    <div id="mode-content"></div>`;
+  el.innerHTML=html;
+  if(orderMode==='supplier') renderSupplierHome();
+  else renderLocationHome();
+}
+
+// ── GLOBAL SEARCH ──
+function doGlobalSearch(){
+  const q=document.getElementById('global-search').value.trim().toLowerCase();
+  const box=document.getElementById('global-results');
+  if(q.length<2){box.style.display='none';box.innerHTML='';return}
+  const suppliers=getSuppliers();
+  const results=[];
+  suppliers.forEach(s=>{
+    (s.products||[]).forEach(p=>{
+      if(p.name.toLowerCase().includes(q)){
+        results.push({supplier:s,product:p});
+      }
+    });
+  });
+  if(!results.length){
+    box.style.display='block';
+    box.innerHTML='<div style="padding:12px;color:var(--text3);text-align:center;font-size:13px">Niciun produs găsit</div>';
+    return;
+  }
+  box.style.display='block';
+  box.innerHTML='<div class="card">'+results.slice(0,30).map(r=>
+    `<div class="global-result" onclick="jumpToSupplier('${r.supplier.id}')">
+      <span class="gr-product">${esc(r.product.name)}</span>
+      <span class="unit-tag">${esc(r.product.unit)}</span>
+      <span class="gr-supplier">📦 ${esc(r.supplier.name)}</span>
+    </div>`
+  ).join('')+'</div>';
+}
+
+function jumpToSupplier(sid){
+  orderMode='supplier';
+  orderView='supplierOrder';
+  currentSupplierId=sid;
+  orderQtys={};
+  orderDeliveryDate=null;
+  renderComenzi();
+}
+
+// ══════════════════════════════════
+//  SUPPLIER MODE
+// ══════════════════════════════════
+function renderSupplierHome(){
+  const suppliers=getSuppliers();
+  const el=document.getElementById('mode-content');
+  el.innerHTML=`<div class="search-box"><span class="ico">🔍</span><input id="search-supplier" placeholder="Caută furnizor..." oninput="filterSuppliersHome()"></div><div id="suppliers-list"></div>`;
+  renderSuppliersListHome(suppliers);
+}
+function filterSuppliersHome(){
+  const q=document.getElementById('search-supplier').value.toLowerCase();
+  renderSuppliersListHome(getSuppliers().filter(s=>s.name.toLowerCase().includes(q)));
+}
+function renderSuppliersListHome(list){
+  document.getElementById('suppliers-list').innerHTML=list.length?list.map(s=>
+    `<div class="card"><div class="card-head" onclick="startSupplierOrder('${s.id}')">
+      <div class="card-icon">📦</div>
+      <div class="card-left"><div class="card-title">${esc(s.name)}</div><div class="card-sub">${(s.products||[]).length} produse</div></div>
+      <div class="card-arrow">›</div>
+    </div></div>`).join(''):'<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Niciun furnizor</div></div>';
+}
+function startSupplierOrder(sid){
+  currentSupplierId=sid;orderQtys={};orderDeliveryDate=null;
+  orderView='supplierOrder';renderComenzi();
+}
+
+function renderSupplierOrder(){
+  const suppliers=getSuppliers();
+  const s=suppliers.find(x=>x.id===currentSupplierId);
+  if(!s){orderView='home';renderComenzi();return}
+  // init missing products
+  (s.products||[]).forEach(p=>{
+    if(!orderQtys[p.id]){orderQtys[p.id]={};LOCATIONS.forEach(l=>{orderQtys[p.id][l.id]=0})}
+  });
+  if(!orderDeliveryDate) orderDeliveryDate=tomorrow();
+  const el=document.getElementById('page-comenzi');
+  el.innerHTML=`
+    <div class="back-btn" onclick="orderView='home';renderComenzi()">← Furnizori</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <span style="font-size:20px">📦</span>
+      <span style="font-size:16px;font-weight:700">${esc(s.name)}</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <label style="font-size:12px;color:var(--text3);white-space:nowrap">📅 Livrare:</label>
+      <input type="date" id="s-deliv-date" value="${orderDeliveryDate}" onchange="orderDeliveryDate=this.value"
+        style="flex:1;padding:8px 10px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:inherit;outline:none;color-scheme:dark">
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <div class="search-box" style="flex:1;margin-bottom:0"><span class="ico">🔍</span><input id="search-product" placeholder="Caută produs..." oninput="filterSupplierProducts()"></div>
+      <button class="btn btn-primary btn-sm" onclick="addProductFromSupplierOrder()" style="flex-shrink:0">+ Produs</button>
+    </div>
+    <div id="s-products-list"></div>
+    <div class="order-summary" id="s-order-summary"></div>`;
+  drawSupplierProducts(s);
+}
+
+function filterSupplierProducts(){
+  const q=document.getElementById('search-product').value.toLowerCase();
+  drawSupplierProducts(getSuppliers().find(x=>x.id===currentSupplierId),q);
+}
+
+function drawSupplierProducts(s,filter=''){
+  const prods=(s.products||[]).filter(p=>!filter||p.name.toLowerCase().includes(filter));
+  document.getElementById('s-products-list').innerHTML=prods.map(p=>{
+    const rows=LOCATIONS.map(l=>{
+      const val=(orderQtys[p.id]&&orderQtys[p.id][l.id])||0;
+      return `<div class="loc-qty-row">
+        <span class="loc-emoji">${l.emoji}</span><span class="loc-label">${esc(l.name)}</span>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="sChg('${p.id}','${l.id}',-1)">−</button>
+          <input class="qty-val" type="number" min="0" value="${val}" id="sq_${p.id}_${l.id}" onchange="sSet('${p.id}','${l.id}',this.value)">
+          <button class="qty-btn" onclick="sChg('${p.id}','${l.id}',1)">+</button>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="product-row"><div class="product-top">
+      <div class="product-name">${esc(p.name)}</div>
+      <span class="unit-tag">${esc(p.unit)}</span>
+      <button class="inline-edit" onclick="quickEditS('${p.id}')">✏️</button>
+    </div>${rows}</div>`;
+  }).join('');
+  updateSSummary();
+}
+
+function sChg(pid,lid,d){if(!orderQtys[pid])orderQtys[pid]={};const v=Math.max(0,(orderQtys[pid][lid]||0)+d);orderQtys[pid][lid]=v;const i=document.getElementById('sq_'+pid+'_'+lid);if(i)i.value=v;updateSSummary()}
+function sSet(pid,lid,v){if(!orderQtys[pid])orderQtys[pid]={};orderQtys[pid][lid]=Math.max(0,parseInt(v)||0);updateSSummary()}
+function updateSSummary(){
+  let t=0;for(const p in orderQtys)for(const l in orderQtys[p])t+=orderQtys[p][l];
+  const el=document.getElementById('s-order-summary');
+  el.innerHTML=t?`<button class="btn btn-primary btn-block" onclick="previewSupplierOrder()">👁️ Previzualizare (${t} articole)</button>`:'';
+}
+
+function quickEditS(pid){
+  const s=getSuppliers().find(x=>x.id===currentSupplierId);
+  const p=(s.products||[]).find(x=>x.id===pid);if(!p)return;
+  showModal(`<div class="modal-title">✏️ Editează produs</div>
+    <div class="form-row"><div class="form-group" style="flex:2"><label class="form-label">Denumire</label><input class="form-input" id="inp-qn" value="${esc(p.name)}"></div>
+    <div class="form-group" style="flex:1"><label class="form-label">UM</label><select class="form-select" id="inp-qu">${unitOptions(p.unit)}</select></div></div>
+    <div class="modal-btns"><button class="btn btn-outline" onclick="closeModal()">Anulează</button><button class="btn btn-primary" onclick="saveQES('${pid}')">✓ Salvează</button></div>`);
+}
+function saveQES(pid){
+  const n=document.getElementById('inp-qn').value.trim(),u=document.getElementById('inp-qu').value;
+  if(!n){showToast('⚠️ Scrie numele');return}
+  const all=getSuppliers(),s=all.find(x=>x.id===currentSupplierId),p=(s.products||[]).find(x=>x.id===pid);
+  if(p){p.name=n;p.unit=u}saveSuppliers(all);closeModal();showToast('✅ Actualizat');
+  drawSupplierProducts(getSuppliers().find(x=>x.id===currentSupplierId),(document.getElementById('search-product')||{}).value?.toLowerCase()||'');
+}
+function addProductFromSupplierOrder(){
+  showModal(`<div class="modal-title">➕ Produs nou</div>
+    <div class="form-row"><div class="form-group" style="flex:2"><label class="form-label">Nume</label><input class="form-input" id="inp-pn" placeholder="Ex: Coca Cola Zero 0,5L"></div>
+    <div class="form-group" style="flex:1"><label class="form-label">UM</label><select class="form-select" id="inp-pu">${unitOptions('buc')}</select></div></div>
+    <div class="modal-btns"><button class="btn btn-outline" onclick="closeModal()">Anulează</button><button class="btn btn-primary" onclick="doAddProdS()">✓ Adaugă</button></div>`);
+  setTimeout(()=>document.getElementById('inp-pn').focus(),300);
+}
+function doAddProdS(){
+  const n=document.getElementById('inp-pn').value.trim(),u=document.getElementById('inp-pu').value;
+  if(!n){showToast('⚠️ Scrie numele');return}
+  const all=getSuppliers(),s=all.find(x=>x.id===currentSupplierId);
+  const np={id:uid(),name:n,unit:u};s.products.push(np);saveSuppliers(all);
+  orderQtys[np.id]={};LOCATIONS.forEach(l=>{orderQtys[np.id][l.id]=0});
+  closeModal();showToast('✅ Adăugat');renderSupplierOrder();
+}
+
+function buildSupplierMsg(){
+  const s=getSuppliers().find(x=>x.id===currentSupplierId);
+  const delivStr=fmtDate(orderDeliveryDate||tomorrow());
+  let msg=`Bună ziua!\n\nPentru data de *${delivStr}* avem nevoie de:\n`;
+  let hasItems=false;const locItems={};
+  LOCATIONS.forEach(l=>{locItems[l.id]=[]});
+  (s.products||[]).forEach(p=>{LOCATIONS.forEach(l=>{
+    const q=(orderQtys[p.id]&&orderQtys[p.id][l.id])||0;
+    if(q>0)locItems[l.id].push({name:p.name,qty:q,unit:p.unit});
+  })});
+  LOCATIONS.forEach(l=>{if(!locItems[l.id].length)return;hasItems=true;
+    msg+=`\n${l.emoji} *${l.name}*\n`;
+    locItems[l.id].forEach((it,i)=>{msg+=`${i+1}. ${it.name} — ${it.qty} ${it.unit}\n`});
+  });
+  msg+=`\nMulțumesc!`;
+  return{msg,hasItems,locItems,supplier:s,delivStr};
+}
+function previewSupplierOrder(){
+  const{msg,hasItems,supplier}=buildSupplierMsg();
+  if(!hasItems){showToast('⚠️ Setează cantități');return}
+  showModal(`<div class="modal-title">📋 Previzualizare</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:8px">📦 ${esc(supplier.name)}</div>
+    <div class="preview-box">${esc(msg)}</div>
+    <div class="modal-btns"><button class="btn btn-outline" onclick="closeModal()">← Înapoi</button><button class="btn btn-success" onclick="sendSupplierWA()">💬 WhatsApp</button></div>`);
+}
+function sendSupplierWA(){
+  const{msg,locItems,supplier}=buildSupplierMsg();
+  const hist=getHistory(),d=new Date(),items=[];
+  LOCATIONS.forEach(l=>{if(!locItems[l.id].length)return;
+    locItems[l.id].forEach(it=>{items.push({name:it.name,qty:it.qty,unit:it.unit,locationId:l.id,locationName:l.name,locationEmoji:l.emoji})})});
+  hist.unshift({id:uid(),supplierId:supplier.id,supplierName:supplier.name,date:d.toISOString(),deliveryDate:orderDeliveryDate||'',items});
+  saveHistory(hist);
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+  closeModal();showToast('✅ Salvată în istoric');orderQtys={};orderDeliveryDate=null;orderView='home';renderComenzi();
+}
+
+// ══════════════════════════════════
+//  LOCATION MODE
+// ══════════════════════════════════
+function renderLocationHome(){
+  const el=document.getElementById('mode-content');
+  el.innerHTML=LOCATIONS.map(l=>
+    `<div class="loc-btn" onclick="startLocOrder('${l.id}')"><span class="emoji">${l.emoji}</span><span class="name">${esc(l.name)}</span><span class="card-arrow" style="margin-left:auto;color:var(--text3)">›</span></div>`
+  ).join('');
+}
+function startLocOrder(lid){
+  currentLocationId=lid;locQtys={};locDeliveryDate=null;
+  orderView='locOrder';renderComenzi();
+}
+
+function renderLocOrder(){
+  const loc=LOCATIONS.find(l=>l.id===currentLocationId);
+  if(!loc){orderView='home';renderComenzi();return}
+  if(!locDeliveryDate)locDeliveryDate=tomorrow();
+  const suppliers=getSuppliers();
+  const el=document.getElementById('page-comenzi');
+  el.innerHTML=`
+    <div class="back-btn" onclick="orderView='home';renderComenzi()">← Puncte de lucru</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <span style="font-size:22px">${loc.emoji}</span>
+      <span style="font-size:16px;font-weight:700">${esc(loc.name)}</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <label style="font-size:12px;color:var(--text3);white-space:nowrap">📅 Livrare:</label>
+      <input type="date" id="l-deliv-date" value="${locDeliveryDate}" onchange="locDeliveryDate=this.value"
+        style="flex:1;padding:8px 10px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:inherit;outline:none;color-scheme:dark">
+    </div>
+    <div class="search-box"><span class="ico">🔍</span><input id="search-loc-prod" placeholder="Caută produs la orice furnizor..." oninput="filterLocProducts()"></div>
+    <div id="l-products-list"></div>
+    <div class="order-summary" id="l-order-summary"></div>`;
+  drawLocProducts(suppliers);
+}
+
+function filterLocProducts(){
+  const q=document.getElementById('search-loc-prod').value.toLowerCase();
+  drawLocProducts(getSuppliers(),q);
+}
+
+function drawLocProducts(suppliers,filter=''){
+  let html='';
+  suppliers.forEach(s=>{
+    const prods=(s.products||[]).filter(p=>!filter||p.name.toLowerCase().includes(filter));
+    if(!prods.length)return;
+    html+=`<div class="supplier-section">📦 ${esc(s.name)}</div><div class="card">`;
+    prods.forEach(p=>{
+      const key=s.id+':'+p.id;
+      const val=locQtys[key]||0;
+      html+=`<div class="loc-product-row">
+        <div class="product-name">${esc(p.name)}</div>
+        <span class="unit-tag">${esc(p.unit)}</span>
+        <button class="inline-edit" onclick="quickEditL('${s.id}','${p.id}')">✏️</button>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="lChg('${s.id}','${p.id}',-1)">−</button>
+          <input class="qty-val" type="number" min="0" value="${val}" id="lq_${s.id}_${p.id}" onchange="lSet('${s.id}','${p.id}',this.value)">
+          <button class="qty-btn" onclick="lChg('${s.id}','${p.id}',1)">+</button>
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('l-products-list').innerHTML=html||'<div class="empty"><div class="empty-text">Niciun produs găsit</div></div>';
+  updateLSummary();
+}
+
+function lChg(sid,pid,d){const k=sid+':'+pid;locQtys[k]=Math.max(0,(locQtys[k]||0)+d);const i=document.getElementById('lq_'+sid+'_'+pid);if(i)i.value=locQtys[k];updateLSummary()}
+function lSet(sid,pid,v){locQtys[sid+':'+pid]=Math.max(0,parseInt(v)||0);updateLSummary()}
+function updateLSummary(){
+  let t=0;for(const k in locQtys)t+=locQtys[k];
+  const el=document.getElementById('l-order-summary');
+  el.innerHTML=t?`<button class="btn btn-primary btn-block" onclick="previewLocOrder()">👁️ Previzualizare (${t} articole)</button>`:'';
+}
+
+function quickEditL(sid,pid){
+  const s=getSuppliers().find(x=>x.id===sid);
+  const p=(s.products||[]).find(x=>x.id===pid);if(!p)return;
+  showModal(`<div class="modal-title">✏️ Editează produs</div>
+    <div class="form-row"><div class="form-group" style="flex:2"><label class="form-label">Denumire</label><input class="form-input" id="inp-qn" value="${esc(p.name)}"></div>
+    <div class="form-group" style="flex:1"><label class="form-label">UM</label><select class="form-select" id="inp-qu">${unitOptions(p.unit)}</select></div></div>
+    <div class="modal-btns"><button class="btn btn-outline" onclick="closeModal()">Anulează</button><button class="btn btn-primary" onclick="saveQEL('${sid}','${pid}')">✓ Salvează</button></div>`);
+}
+function saveQEL(sid,pid){
+  const n=document.getElementById('inp-qn').value.trim(),u=document.getElementById('inp-qu').value;
+  if(!n){showToast('⚠️ Scrie numele');return}
+  const all=getSuppliers(),s=all.find(x=>x.id===sid),p=(s.products||[]).find(x=>x.id===pid);
+  if(p){p.name=n;p.unit=u}saveSuppliers(all);closeModal();showToast('✅ Actualizat');
+  drawLocProducts(getSuppliers(),(document.getElementById('search-loc-prod')||{}).value?.toLowerCase()||'');
+}
+
+function buildLocMessages(){
+  const loc=LOCATIONS.find(l=>l.id===currentLocationId);
+  const suppliers=getSuppliers();
+  const delivStr=fmtDate(locDeliveryDate||tomorrow());
+  const msgs=[];
+  suppliers.forEach(s=>{
+    const items=[];
+    (s.products||[]).forEach(p=>{
+      const q=locQtys[s.id+':'+p.id]||0;
+      if(q>0) items.push({name:p.name,qty:q,unit:p.unit});
+    });
+    if(!items.length)return;
+    let msg=`Bună ziua!\n\nPentru data de *${delivStr}* avem nevoie de:\n\n${loc.emoji} *${loc.name}*\n`;
+    items.forEach((it,i)=>{msg+=`${i+1}. ${it.name} — ${it.qty} ${it.unit}\n`});
+    msg+=`\nMulțumesc!`;
+    msgs.push({supplier:s,items,msg,loc});
+  });
+  return{msgs,delivStr,loc};
+}
+
+let _locMsgs=[];
+let _locSent=new Set();
+
+function previewLocOrder(){
+  const{msgs}=buildLocMessages();
+  if(!msgs.length){showToast('⚠️ Setează cantități');return}
+  _locMsgs=msgs;_locSent=new Set();
+  drawLocPreview();
+}
+
+function drawLocPreview(){
+  let html=`<div class="modal-title">📋 ${_locMsgs.length} furnizor${_locMsgs.length>1?'i':''}</div>`;
+  _locMsgs.forEach((m,i)=>{
+    const sent=_locSent.has(i);
+    html+=`<div style="display:flex;align-items:center;justify-content:space-between;margin:${i?'14px':'0'} 0 6px">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">📦 ${esc(m.supplier.name)}</div>
+      <button class="btn ${sent?'btn-outline':'btn-success'} btn-sm" onclick="sendOneLocWA(${i})" ${sent?'disabled':''} style="${sent?'opacity:.5':''}">
+        ${sent?'✅ Trimis':'💬 WhatsApp'}
+      </button>
+    </div>
+    <div class="preview-box">${esc(m.msg)}</div>`;
+  });
+  const allSent=_locSent.size===_locMsgs.length;
+  html+=`<div class="modal-btns" style="margin-top:14px">
+    <button class="btn btn-outline" onclick="finishLocOrder()">✓ Gata</button>
+    ${_locMsgs.length>1&&!allSent?`<button class="btn btn-primary" onclick="sendAllLocWA()">💬 Trimite toate (${_locMsgs.length-_locSent.size})</button>`:''}
+  </div>`;
+  showModal(html);
+}
+
+function sendOneLocWA(idx){
+  if(_locSent.has(idx))return;
+  const m=_locMsgs[idx];
+  // Save to history
+  const hist=getHistory();const d=new Date();
+  const loc=m.loc;
+  const items=m.items.map(it=>({name:it.name,qty:it.qty,unit:it.unit,locationId:loc.id,locationName:loc.name,locationEmoji:loc.emoji}));
+  hist.unshift({id:uid(),supplierId:m.supplier.id,supplierName:m.supplier.name,date:d.toISOString(),deliveryDate:locDeliveryDate||'',items});
+  saveHistory(hist);
+  window.open('https://wa.me/?text='+encodeURIComponent(m.msg),'_blank');
+  _locSent.add(idx);
+  drawLocPreview();
+  showToast(`✅ ${m.supplier.name} — trimis`);
+}
+
+function sendAllLocWA(){
+  _locMsgs.forEach((m,i)=>{
+    if(_locSent.has(i))return;
+    setTimeout(()=>sendOneLocWA(i),i*600);
+  });
+}
+
+function finishLocOrder(){
+  closeModal();
+  if(_locSent.size>0){
+    showToast(`✅ ${_locSent.size} comenzi salvate în istoric`);
+    locQtys={};locDeliveryDate=null;orderView='home';renderComenzi();
+  }
+}
+
+// ══════════════════════════════════
+//  ISTORIC — grouped by supplier
+// ══════════════════════════════════
+let histSearchQ='';
+function renderIstoric(){
+  const hist=getHistory();
+  const el=document.getElementById('page-istoric');
+  if(!hist.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Nu ai comenzi în istoric.<br>Trimite prima comandă din tab-ul 📦 Comenzi.</div></div>';return}
+  const groups={};
+  hist.forEach(o=>{const k=o.supplierName||'Necunoscut';if(!groups[k])groups[k]=[];groups[k].push(o)});
+  let html=`<div class="search-box"><span class="ico">🔍</span><input id="search-hist" placeholder="Caută furnizor în istoric..." value="${esc(histSearchQ)}" oninput="histSearchQ=this.value.toLowerCase();renderIstoric()"></div>`;
+  let found=false;
+  Object.keys(groups).sort().forEach(sn=>{
+    if(histSearchQ&&!sn.toLowerCase().includes(histSearchQ))return;
+    found=true;const orders=groups[sn];
+    html+=`<div class="hist-group-title"><span class="hg-icon">📦</span>${esc(sn)}<span class="hg-count">${orders.length} comenzi</span></div>`;
+    orders.forEach(o=>{
+      const d=new Date(o.date);
+      const ds=String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+d.getFullYear()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+      let delivHtml='';
+      if(o.deliveryDate){const dp=o.deliveryDate.split('-');delivHtml=`<div style="font-size:12px;color:var(--success);margin-bottom:4px">📅 Livrare: ${dp[2]}.${dp[1]}.${dp[0]}</div>`}
+      const byLoc={};
+      (o.items||[]).forEach(it=>{const lk=it.locationName||'General';if(!byLoc[lk])byLoc[lk]={emoji:it.locationEmoji||'📍',items:[]};byLoc[lk].items.push(it)});
+      let itemsHtml='';
+      for(const ln in byLoc){const loc=byLoc[ln];
+        itemsHtml+=`<div class="hist-loc">${loc.emoji} ${esc(ln)}</div>`;
+        itemsHtml+=`<div class="hist-items">${loc.items.map((it,i)=>`${i+1}. ${esc(it.name)} — ${it.qty} ${esc(it.unit||'buc')}`).join('<br>')}</div>`;
+      }
+      html+=`<div class="hist-card"><div class="hist-head"><div class="hist-date">Plasată: ${ds}</div></div>${delivHtml}${itemsHtml}
+        <div class="hist-btns">
+          <button class="btn btn-outline btn-sm" onclick="repeatOrder('${o.id}')">🔄 Repetă</button>
+          <button class="btn btn-outline btn-sm" onclick="resendOrder('${o.id}')">💬 Retrimite</button>
+          <button class="btn btn-outline btn-sm" style="color:var(--danger)" onclick="deleteHistory('${o.id}')">🗑️</button>
+        </div></div>`;
+    });
+  });
+  if(!found)html+='<div class="empty"><div class="empty-text">Niciun furnizor găsit.</div></div>';
+  el.innerHTML=html;
+}
+
+function repeatOrder(oid){
+  const o=getHistory().find(x=>x.id===oid);if(!o)return;
+  const s=getSuppliers().find(x=>x.id===o.supplierId);
+  if(!s){showToast('⚠️ Furnizorul nu mai există');return}
+  // check if multi-location or single
+  const locs=new Set((o.items||[]).map(i=>i.locationId).filter(Boolean));
+  if(locs.size===1){
+    // location mode
+    orderMode='location';currentLocationId=[...locs][0];locQtys={};locDeliveryDate=null;
+    (o.items||[]).forEach(it=>{
+      const p=(s.products||[]).find(x=>x.name===it.name);
+      if(p)locQtys[s.id+':'+p.id]=it.qty;
+    });
+    orderView='locOrder';
+  } else {
+    // supplier mode
+    orderMode='supplier';currentSupplierId=s.id;orderQtys={};orderDeliveryDate=null;
+    (o.items||[]).forEach(it=>{
+      const p=(s.products||[]).find(x=>x.name===it.name);
+      if(p&&it.locationId){
+        if(!orderQtys[p.id])orderQtys[p.id]={};
+        orderQtys[p.id][it.locationId]=it.qty;
+      }
+    });
+    orderView='supplierOrder';
+  }
+  currentTab='comenzi';
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab')[0].classList.add('active');
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-comenzi').classList.add('active');
+  renderComenzi();showToast('✅ Cantități precompletate');
+}
+
+function resendOrder(oid){
+  const o=getHistory().find(x=>x.id===oid);if(!o)return;
+  showModal(`<div class="modal-title">📅 Data livrare</div>
+    <div class="form-group"><label class="form-label">Pentru ce dată retrimiti?</label>
+    <input type="date" class="form-input" id="inp-resend-date" value="${tomorrow()}" style="color-scheme:dark"></div>
+    <div class="modal-btns"><button class="btn btn-outline" onclick="closeModal()">Anulează</button>
+    <button class="btn btn-success" onclick="doResend('${o.id}')">💬 Trimite</button></div>`);
+}
+function doResend(oid){
+  const o=getHistory().find(x=>x.id===oid);if(!o)return;
+  const dv=document.getElementById('inp-resend-date').value;
+  const delivStr=fmtDate(dv);
+  let msg=`Bună ziua!\n\nPentru data de *${delivStr}* avem nevoie de:\n`;
+  const byLoc={};
+  (o.items||[]).forEach(it=>{const lk=it.locationName||'General';if(!byLoc[lk])byLoc[lk]={emoji:it.locationEmoji||'📍',items:[]};byLoc[lk].items.push(it)});
+  for(const ln in byLoc){const loc=byLoc[ln];msg+=`\n${loc.emoji} *${ln}*\n`;loc.items.forEach((it,i)=>{msg+=`${i+1}. ${it.name} — ${it.qty} ${it.unit||'buc'}\n`})}
+  msg+=`\nMulțumesc!`;closeModal();
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+
+function deleteHistory(oid){
+  if(!confirm('Ștergi această comandă din istoric?'))return;
+  saveHistory(getHistory().filter(x=>x.id!==oid));showToast('🗑️ Ștearsă');renderIstoric();
+}
+
+// ══════════════════════════════════
+//  GESTIUNE
+// ══════════════════════════════════
+function renderGestiune(){
+  const suppliers=getSuppliers();
+  const el=document.getElementById('page-gestiune');
+  el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div class="section-title" style="margin:0">Furnizori (${suppliers.length})</div>
+    <button class="btn btn-primary btn-sm" onclick="addSupplierModal()">+ Furnizor</button>
+  </div>
+  <div class="search-box"><span class="ico">🔍</span><input id="search-gestiune" placeholder="Caută furnizor..." oninput="filterGestiune()"></div>
+  <div id="gestiune-list"></div>
+  <div style="margin-top:20px;display:flex;flex-direction:column;gap:10px;align-items:center">
+    <button class="btn btn-success btn-sm btn-block" onclick="exportApp()" style="max-width:320px">📤 Exportă aplicația (cu modificări)</button>
+    <button class="btn btn-outline btn-sm" onclick="exportData()" style="max-width:320px">💾 Exportă doar datele (JSON)</button>
+    <button class="btn btn-outline btn-sm" onclick="importData()" style="max-width:320px">📥 Importă date (JSON)</button>
+    <button class="btn btn-outline btn-sm" onclick="resetData()" style="color:var(--danger);border-color:var(--danger);max-width:320px">🔄 Resetează la date implicite</button>
+  </div>
+  <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">`;
+  renderGestiuneList(suppliers);
+}
+function filterGestiune(){renderGestiuneList(getSuppliers().filter(s=>s.name.toLowerCase().includes(document.getElementById('search-gestiune').value.toLowerCase())))}
+function renderGestiuneList(list){
+  document.getElementById('gestiune-list').innerHTML=list.map(s=>
+    `<div class="card"><div class="card-head" onclick="openSupplierDetail('${s.id}')">
+      <div class="card-icon">📦</div><div class="card-left"><div class="card-title">${esc(s.name)}</div><div class="card-sub">${(s.products||[]).length} produse</div></div>
+      <div class="edit-btns"><button class="edit-btn" onclick="event.stopPropagation();editSupplierModal('${s.id}')">✏️</button><button class="edit-btn del" onclick="event.stopPropagation();deleteSupplier('${s.id}')">🗑️</button></div>
+    </div></div>`).join('');
+}
+function addSupplierModal(){
+  showModal(`<div class="modal-title">➕ Furnizor nou</div><div class="form-group"><label class="form-label">Nume furnizor</label><input class="form-input" id="inp-sn" placeholder="Ex: OMNIA GUSTI SRL"></div>
+    <div class="modal-btns"><button class="btn btn-outline" onclick="closeModal()">Anulează</button><button class="btn btn-primary" onclick="addSupplier()">✓ Adaugă</button></div>`);
+  setTimeout(()=>document.getElementById('inp-sn').focus(),300);
+}
+function addSupplier(){const n=document.getElementById('inp-sn').value.trim();if(!n){showToast('⚠️ Scrie numele');return}const all=getSuppliers();all.push({id:uid(),name:n,products:[]});saveSuppliers(all);closeModal();showToast('✅ Adăugat');renderGestiune()}
+function editSupplierModal(sid){const s=getSuppliers().find(x=>x.id===sid);if(!s)return;
+  showModal(`<div class="modal-title">✏️ Editează furnizor</div><div class="form-group"><label class="form-label">Nume furnizor</label><input class="form-input" id="inp-sn" value="${esc(s.name)}"></div>
+    <div class="modal-btns"><button class="btn btn-outline" onclick="closeModal()">Anulează</button><button class="btn btn-primary" onclick="updateSupplier('${sid}')">✓ Salvează</button></div>`)}
+function updateSupplier(sid){const n=document.getElementById('inp-sn').value.trim();if(!n){showToast('⚠️ Scrie numele');return}const all=getSuppliers();const s=all.find(x=>x.id===sid);if(s)s.name=n;saveSuppliers(all);closeModal();showToast('✅ Actualizat');renderGestiune()}
+function deleteSupplier(sid){if(!confirm('Ștergi furnizorul și produsele?'))return;saveSuppliers(getSuppliers().filter(x=>x.id!==sid));showToast('🗑️ Șters');renderGestiune()}
+
+function openSupplierDetail(sid){
+  const s=getSuppliers().find(x=>x.id===sid);if(!s)return;
+  document.getElementById('page-gestiune').innerHTML=`
+    <div class="back-btn" onclick="renderGestiune()">← Furnizori</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div><div style="font-size:16px;font-weight:700">${esc(s.name)}</div><div style="font-size:12px;color:var(--text3)">${(s.products||[]).length} produse</div></div>
+      <button class="btn btn-primary btn-sm" onclick="addProductGModal('${sid}')">+ Produs</button>
+    </div>
+    <div class="search-box"><span class="ico">🔍</span><input id="search-pg" placeholder="Caută produs..." oninput="filterPG('${sid}')"></div>
+    <div class="card" id="pg-list"></div>`;
+  renderPG(s);
+}
+function filterPG(sid){renderPG(getSuppliers().find(x=>x.id===sid),document.getElementById('search-pg').value.toLowerCase())}
+function renderPG(s,filter=''){
+  const prods=(s.products||[]).filter(p=>!filter||p.name.toLowerCase().includes(filter));
+  document.getElementById('pg-list').innerHTML=prods.length?prods.map(p=>`<div class="supplier-edit-row">
+    <div class="supplier-edit-name">${esc(p.name)}</div><span class="supplier-edit-unit">${esc(p.unit||'buc')}</span>
+    <div class="edit-btns"><button class="edit-btn" onclick="editPGModal('${s.id}','${p.id}')">✏️</button><button class="edit-btn del" onclick="deletePG('${s.id}','${p.id}')">🗑️</button></div>
+  </div>`).join(''):'<div style="padding:20px;text-align:center;color:var(--text3)">Niciun produs</div>';
+}
+function addProductGModal(sid){
+  showModal(`<div class="modal-title">➕ Produs nou</div>
+    <div class="form-row"><div class="form-group" style="flex:2"><label class="form-label">Nume</label><input class="form-input" id="inp-pn" placeholder="Ex: Unt crema MP"></div>
+    <div class="form-group" style="flex:1"><label class="form-label">UM</label><select class="form-select" id="inp-pu">${unitOptions('buc')}</select></div></div>
+    <div class="modal-btns"><button class="btn btn-outline" onclick="closeModal()">Anulează</button><button class="btn btn-primary" onclick="addPG('${sid}')">✓ Adaugă</button></div>`);
+  setTimeout(()=>document.getElementById('inp-pn').focus(),300);
+}
+function addPG(sid){const n=document.getElementById('inp-pn').value.trim(),u=document.getElementById('inp-pu').value;if(!n){showToast('⚠️ Scrie numele');return}
+  const all=getSuppliers(),s=all.find(x=>x.id===sid);s.products.push({id:uid(),name:n,unit:u});saveSuppliers(all);closeModal();showToast('✅ Adăugat');openSupplierDetail(sid)}
+function editPGModal(sid,pid){const s=getSuppliers().find(x=>x.id===sid);const p=s.products.find(x=>x.id===pid);
+  showModal(`<div class="modal-title">✏️ Editează produs</div>
+    <div class="form-row"><div class="form-group" style="flex:2"><label class="form-label">Nume</label><input class="form-input" id="inp-pn" value="${esc(p.name)}"></div>
+    <div class="form-group" style="flex:1"><label class="form-label">UM</label><select class="form-select" id="inp-pu">${unitOptions(p.unit||'buc')}</select></div></div>
+    <div class="modal-btns"><button class="btn btn-outline" onclick="closeModal()">← Înapoi</button><button class="btn btn-primary" onclick="updatePG('${sid}','${pid}')">✓ Salvează</button></div>`)}
+function updatePG(sid,pid){const n=document.getElementById('inp-pn').value.trim(),u=document.getElementById('inp-pu').value;if(!n){showToast('⚠️ Scrie numele');return}
+  const all=getSuppliers(),s=all.find(x=>x.id===sid),p=s.products.find(x=>x.id===pid);if(p){p.name=n;p.unit=u}saveSuppliers(all);closeModal();showToast('✅ Actualizat');openSupplierDetail(sid)}
+function deletePG(sid,pid){if(!confirm('Ștergi produsul?'))return;const all=getSuppliers(),s=all.find(x=>x.id===sid);s.products=s.products.filter(x=>x.id!==pid);saveSuppliers(all);showToast('🗑️ Șters');openSupplierDetail(sid)}
+
+function exportApp(){
+  var currentSuppliers=getSuppliers();
+  var currentHistory=getHistory();
+  var newDefaults=JSON.stringify(currentSuppliers.map(function(s){return{name:s.name,products:(s.products||[]).map(function(p){return{name:p.name,unit:p.unit||'buc'}})}}));
+  var histData=JSON.stringify(currentHistory);
+  // Build a clean HTML by reading the current page and replacing the defaults
+  var html=document.documentElement.outerHTML;
+  html=html.replace(/const DEFAULT_SUPPLIERS=\[.*?\];/s,'const DEFAULT_SUPPLIERS='+newDefaults+';');
+  // Add inline init data via a global variable before the main script
+  var initBlock='\n<scr'+'ipt>try{localStorage.removeItem("mdmyr_suppliers_v3");';
+  if(currentHistory.length>0){
+    initBlock+='if(!localStorage.getItem("mdmyr_history_v3"))localStorage.setItem("mdmyr_history_v3",'+JSON.stringify(histData)+');';
+  }
+  initBlock+='}catch(e){}</sc'+'ript>\n</head>';
+  html=html.replace('</head>',initBlock);
+  var blob=new Blob(['<!DOCTYPE html>\n'+html],{type:'text/html'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='madamyr-comenzi.html';a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('📤 Fișier exportat cu modificările tale!');
+}
+
+function exportData(){
+  const data={suppliers:getSuppliers(),history:getHistory()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='madamyr-date-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('💾 Date exportate!');
+}
+
+function importData(){document.getElementById('import-file').click()}
+function handleImport(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data.suppliers||!Array.isArray(data.suppliers)){showToast('⚠️ Fișier invalid');return}
+      if(!confirm(`Importi ${data.suppliers.length} furnizori și ${(data.history||[]).length} comenzi? Datele actuale vor fi înlocuite.`))return;
+      saveSuppliers(data.suppliers);
+      if(data.history)saveHistory(data.history);
+      showToast('📥 Date importate cu succes!');
+      renderGestiune();
+    }catch(err){showToast('⚠️ Eroare la citire: '+err.message)}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+function resetData(){if(!confirm('Resetezi totul la date implicite?'))return;
+  localStorage.removeItem('mdmyr_suppliers_v3');localStorage.removeItem('mdmyr_history_v3');showToast('🔄 Resetat');renderGestiune()}
+
+// ── INIT ──
+renderPage();
+</script>
+
+
+</body></html>
